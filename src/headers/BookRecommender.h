@@ -14,22 +14,22 @@ using namespace std;
 class BookRecommender {
 public:
     void viewResult();
-    multimap<string, int> countGenre(vector<shared_ptr<Book>> history);
-    vector<shared_ptr<Author>> countAuthors(vector<shared_ptr<Book>> history);
-    vector<shared_ptr<Language>> countLang(vector<shared_ptr<Book>> history);
+    void countGenre(vector<shared_ptr<Book>> history);
+    void countAuthors(vector<shared_ptr<Book>> history);
+    void countLang(vector<shared_ptr<Book>> history);
     void analyzeHistory(vector<shared_ptr<Book>> history);
-    void makeRecommendation(multimap<string, shared_ptr<Book>> & recommendResult);
-    void sortRecommendationByCount(multimap<string, shared_ptr<Book>> & recommendResult);
-    void sortRecommendationByDate(multimap<string, shared_ptr<Book>> & recommendResult);
-    void sortRecommendationByPrice(multimap<string, shared_ptr<Book>> & recommendResult);
-    void sortRecommendation(multimap<string, shared_ptr<Book>> & recommendResult);
+    void makeRecommendation();
+    void sortRecommendationByCount();
+    void sortRecommendationByDate();
+    void sortRecommendationByPrice();
+    void sortRecommendation();
     void printRecommendation();
     void readBookHistory(shared_ptr<ostream> bookDatabase, vector<shared_ptr<Book>> & history);
 private:
     multimap<string, unique_ptr<Book>> books;
     multimap<string, int> genreCount;
-    vector<unique_ptr<Author>> authorCount;
-    vector<unique_ptr<Language>> languageCount;
+    multimap<string, int> authorCount;
+    multimap<string, int> languageCount;
     multimap<string, unique_ptr<DetailGenre>> detailGenre;
     multimap<string, unique_ptr<Book>> recommendResult;    
 };

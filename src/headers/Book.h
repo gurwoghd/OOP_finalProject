@@ -8,8 +8,8 @@ using namespace std;
 
 class Book {
 public:
-    Book(string date, string title, string author, string publisher, string lang, float price) 
-        : date(date), title(title), author(author), publisher(publisher), lang(lang), price(price) { }
+    Book(string date, string title, string author, string publisher, string lang, float price, string genre) 
+        : date(date), title(title), author(author), publisher(publisher), lang(lang), price(price), genre(genre) { }
     void setPublisher(const string publisher) { this->publisher = publisher; }
     void setTitle(const string title) {this->title = title;}
     void setPrice(const float price) {this->price=price;}
@@ -23,6 +23,7 @@ public:
     string getDate() const {return this->date;}
     string getAuthor() const { return this->author;}
     string getLang() const {return this->lang;}    
+    string getGenre() const {return this->genre;}
 
 protected:
     string date;
@@ -31,6 +32,7 @@ protected:
     string publisher;
     string lang;
     float price;
+    string genre;
     vector<string> detailGenre;
 
     
