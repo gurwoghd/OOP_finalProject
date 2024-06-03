@@ -18,9 +18,6 @@ public:
     vector<shared_ptr<Author>> countAuthors(vector<shared_ptr<Book>> history);
     vector<shared_ptr<Language>> countLang(vector<shared_ptr<Book>> history);
     void analyzeHistory(vector<shared_ptr<Book>> history);
-    void printRecommendation();
-    void makeRecommendation(recommendResult)
-    void makeRecommendationByCount()
     void makeRecommendation(multimap<string, shared_ptr<Book>> & recommendResult);
     void sortRecommendationByCount(multimap<string, shared_ptr<Book>> & recommendResult);
     void sortRecommendationByDate(multimap<string, shared_ptr<Book>> & recommendResult);
@@ -34,7 +31,7 @@ private:
     vector<unique_ptr<Author>> authorCount;
     vector<unique_ptr<Language>> languageCount;
     multimap<string, unique_ptr<DetailGenre>> detailGenre;
-    multimap<string, unique_tpr<Book>> recommendResult;    
+    multimap<string, unique_ptr<Book>> recommendResult;    
 };
 
 class Author {
