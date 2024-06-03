@@ -3,17 +3,21 @@
 #include <iostream>
 #include <string>
 #include <memory>
-#include "Book.h"
 #include <array>
+#include <map>
+
+#include "Book.h"
+
 
 using namespace std;
 
 class BookManager {
 public:
-    void addBook();
-    void deleteBook();
+    BookManager();
+    void addBook(Book& book, string genre);
+    void deleteBook(string genre, string title);
 private:
-    array<vector<unique_ptr<Book>>, 4> books;
+    multimap<string, unique_ptr<Book>> books;
 
     friend class Admin;
 };

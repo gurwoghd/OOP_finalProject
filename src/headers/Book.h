@@ -17,12 +17,12 @@ public:
     void setAuthor(const string author) {this->author = author;}
     void setLang(const string lang) {this->lang = lang;}    
 
-    const string getPublisher() const {return this->publisher;}
-    const string getTitle() const {return this->title;}
-    const float getPrice() const {return this->price;}
-    const string getDate() const {return this->date;}
-    const string getAuthor() { return this->author;}
-    const string getLang() {return this->lang;}    
+    string getPublisher() const {return this->publisher;}
+    string getTitle() const {return this->title;}
+    float getPrice() const {return this->price;}
+    string getDate() const {return this->date;}
+    string getAuthor() const { return this->author;}
+    string getLang() const {return this->lang;}    
 
 protected:
     string date;
