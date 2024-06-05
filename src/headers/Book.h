@@ -38,19 +38,33 @@ protected:
     
 private:
     friend class BookManager;
-    friend class BookRecoommender;
+    friend class BookRecommender; //오타 수정함//
 };
 
+//Genre별 constructor 추가했습니다.//
 class Literature : public Book {
+public:
+    Literature(string date, string title, string author, string publisher, string lang, float price):
+Book(date, title, author, publisher, lang, price, "Literature"){}
 };
 
 class Non_fiction : public Book {
+public:
+    Non_fiction(string date, string title, string author, string publisher, string lang, float price):
+Book(date, title, author, publisher, lang, price, "Non_fiction"){}
 };
 
 class Practical : public Book {
+public:
+    Practical(string date, string title, string author, string publisher, string lang, float price):
+Book(date, title, author, publisher, lang, price, "Practical"){}
 
 };
 
+
 class TeenAndChild : public Book {
+public:
+    TeenAndChild(string date, string title, string author, string publisher, string lang, float price):
+Book(date, title, author, publisher, lang, price, "TeenAndChild"){}
 
 };
