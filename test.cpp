@@ -1,28 +1,29 @@
 #include <iostream>
-#include <map>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
 int main(){
-    multimap<string, int> books;
+    fstream file;
+    string filename = "databases/UserDatabase.txt";
 
-    books.insert(make_pair("a", 1));
-    books.insert(make_pair("b", 1));
-
-    // auto rangeIter = books.equal_range("b");
-    // for(auto it = rangeIter.first; it != rangeIter.second; ++it){
-    //     if(it->second == 1){
-    //         books.erase(it);
-    //         break;
-    //     }
-            
-    // }
-    // for(auto it = books.begin(); it!=books.end(); ++it){
-    //     cout << it->first << " " << it->second << endl;
-    // }
-    auto it = books.find("a");
-    it->second += 1;
-    for(auto it = books.begin(); it!=books.end(); ++it) {
-        cout << it->first << " " << it->second << endl;
+    file.open(filename);
+    if(file.is_open()) {
+        string line;
+        stringstream ss(line);
+        while(getline())
+        vector<string> a = split(line, ' ');
+        
+        getline(file, line);
+        cout << line << endl;
+        cout << a[0] << endl << a[1] << endl;
+        // getline(file, line);
+        // cout << line << endl;
+    }else{
+        cout << "not opened";
     }
+    file.close();
 }

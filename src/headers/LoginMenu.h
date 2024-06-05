@@ -1,0 +1,174 @@
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <vector>
+
+
+#include "User.h"
+
+
+using namespace std;
+
+// Virtual class Command
+class Command {
+public:
+    virtual void execute() = 0;
+    virtual ~Command() {}
+};
+
+// Register and login commands have inheritance from Command, polymorphism
+class RegisterCommand : public Command {
+private:
+    // UserManager is needed in order to add the newly made account into the user vector
+    UserManager& manager;
+public:
+    RegisterCommand(UserManager& manager) : manager(manager) {}
+
+    // Override execute from virtual class Command, polymorphism
+    void execute() override {
+        string id;
+        string pw;
+        cout << "Enter an ID to use: ";
+        cin >> id;
+        cout << "Enter a password to use: ";
+        cin >> pw;
+        if (!manager.checkID(id)) {
+            manager.addNewUser(id, pw);
+            cout << "\nRegister Complete! You are ready to log in!" << endl;
+        }
+        else {
+            cout << "\nID already exists. Try again." << endl;
+        }
+    }
+};
+
+class LoginasAdmin : public Command {
+private:
+    UserManager& manager;
+public:
+    LoginasAdmin(UserManager& manager) : manager(manager) {}
+
+    // Override execute from virtual class Command
+    void execute() override {
+        string id;
+        string pw;
+        string adminID = "admin";
+        string adminPW = "admin1234";
+
+        cout << "Enter the admin ID: ";
+        cin >> id;
+        cout << "Enter the admin PW: ";
+        cin >> pw;
+        if (id == adminID && pw == adminPW) {
+            cout << "Welcome admin!" << endl;
+        }
+        else {
+            cout << "ID or PW is incorrect." << endl;
+        }
+    }
+};
+
+class LoginasCustomer : public Command {
+private:
+    UserManager& manager;
+    string currentUserID;
+public:
+    LoginasCustomer(UserManager& manager) : manager(manager) {}
+
+    // Override execute from virtual class Command
+    void execute() override {
+        string id;
+        string pw;
+        cout << "Enter your ID: ";
+        cin >> id;
+        cout << "Enter your password: ";
+        cin >> pw;
+        if (manager.check(id, pw)) {
+            cout << "Login successful, welcome " << id << endl;
+            currentUserID = id;
+            displayCustomerMenu();
+        }
+        else {
+            cout << "ID or password is incorrect." << endl;
+        }
+    }
+
+    void displayCustomerMenu() {
+        unique_ptr<Command> openLibrary = make_unique<OpenLibraryCommand>();
+        unique_ptr<Command> purchaseBook = make_unique<PurchaseBookCommand>();
+        unique_ptr<Command> getREcommendation = make_unique<GetRecommendationCommand>();
+
+        while (true) {
+            int selection;
+            cout << "1. Open Library" << endl;
+            cout << "2. Purchase Book" << endl;
+            cout << "3. Get Recommendation" << endl;
+            cout << "4. Logout" << endl;
+            cout << "\nSelect an option: ";
+            cin >> selection;
+
+            switch (selection) {
+            case 1:
+                openLibrary->execute();
+                break;
+            case 2:
+                purchaseBook->execute();
+                break;
+            case 3:
+                getRecommendation->execute();
+                break;
+            case 4:
+                delete openLibrary;
+                delete purchaseBook;
+                delete getRecommendation;
+                return;
+            default:
+                cout << "Invalid selection, select another one: ";
+            }
+        }
+    }
+};
+
+// Using the classes made above, the menu displays the login section
+class LoginMenu {
+private:
+    shared_ptr<Command> registerCommand;
+    shared_ptr<Command> administerCommand;
+    shared_ptr<Command> customerCommand;
+public:
+    LoginMenu(shared_ptr<Command> reg, shared_ptr<Command> admin, shared_ptr<Command> cus)
+        : registerCommand(reg), administerCommand(admin), customerCommand(cus) {}
+
+    void display(unique_ptr<User> currentUser) {
+        cout << "Welcome to the Book Recommendation System!" << endl;
+        while (true) {
+            int selection;
+            cout << "1. Register" << endl;
+            cout << "2. Login(Admin)" << endl;
+            cout << "3. Login(Customer)" << endl;
+            cout << "4. Exit" << endl;
+            cout << "\nSelect an option: ";
+            cin >> selection;
+
+            switch (selection) {
+            case 1:
+                registerCommand->execute();
+                break;
+            case 2:
+                administerCommand->execute();
+                break;
+            case 3:
+                customerCommand->execute();
+                break;
+            case 4:
+                return;
+            default:
+                cout << "Invalid selection, select another one: ";
+            }
+        }
+    }
+};
+
