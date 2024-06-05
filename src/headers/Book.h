@@ -25,6 +25,8 @@ public:
     string getLang() const {return this->lang;}    
     string getGenre() const {return this->genre;}
 
+    void viewInfo() const;
+
 protected:
     string date;
     string title;

@@ -8,9 +8,6 @@
 
 using namespace std;
 
-void BookRecommender::viewResult() {
-
-}
 
 void BookRecommender::countGenre(vector<shared_ptr<Book>> history) {
     this->genreCount.insert(make_pair("Literature", 0));

@@ -5,24 +5,27 @@
 #include <vector>
 #include <array>
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <memory>
+#include <map>
 
 #include "headers/BookManager.h"
+#include "AdminMenu.h"
 
 using namespace std;
 
 //////////////////////  Exception clsses  ///////////////////////////////////
 class AlreadyExist : public exception {
 public:
-    virtual string what() override{
+    virtual string what() {
         return "User already exsits\n";
     }
 };
 
 class DatabaseNotOpen : public exception {
 public:
-    virtual string what() override {
+    virtual string what()  {
         return "File not opened\n";
     }
 };
@@ -53,21 +56,27 @@ private:
     unique_ptr<AdminMenu> menu;
 
     friend class AdminMenu;
-}
+};
 
 class Customer : public User {
 public:
+    Customer() { bookRecommender = make_unique<BookRecommender>(); }
     void addRecent();
     void showLibrary();
 private:
+    unique_ptr<BookRecommender> bookRecommender;
+
     fstream readBookDB;
     fstream purchaseBookDB;
+
+    multimap<string, shared_ptr<Book>> readBookHistory;
+    multimap<string, shared_ptr<Book>> purchaseBookHistory;
     
     friend class BookRecommender;
     friend class OpenLibrary;
     friend class PurchaseBook;
     friend class GetRecommendations;
-}
+};
 
 
 class UserManager {
@@ -91,11 +100,11 @@ public:
             userDB.close();
         } catch(DatabaseNotOpen& e) {
             cout << e.what() << endl;
-        } catch(UserExit& e) {
+        } catch(AlreadyExist& e) {
             cout << e.what() << endl;
         }
         
-    }
+    };
 
     // bool checkID(const string& id) const {
     //     for (const auto& user : users) {

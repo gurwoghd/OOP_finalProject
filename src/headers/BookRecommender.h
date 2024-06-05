@@ -13,7 +13,6 @@ using namespace std;
 
 class BookRecommender {
 public:
-    void viewResult();
     void countGenre(vector<shared_ptr<Book>> history);
     void countAuthors(vector<shared_ptr<Book>> history);
     void countLang(vector<shared_ptr<Book>> history);

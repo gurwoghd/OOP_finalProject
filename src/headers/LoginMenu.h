@@ -8,7 +8,7 @@
 
 
 #include "User.h"
-
+#include "CustomerMenu.h"
 
 using namespace std;
 
@@ -35,7 +35,7 @@ public:
         cin >> id;
         cout << "Enter a password to use: ";
         cin >> pw;
-        if (!manager.checkID(id)) {
+        if (!manager.alreadyExistID(id)) {
             manager.addNewUser(id, pw);
             cout << "\nRegister Complete! You are ready to log in!" << endl;
         }
@@ -93,41 +93,6 @@ public:
         }
         else {
             cout << "ID or password is incorrect." << endl;
-        }
-    }
-
-    void displayCustomerMenu() {
-        unique_ptr<Command> openLibrary = make_unique<OpenLibraryCommand>();
-        unique_ptr<Command> purchaseBook = make_unique<PurchaseBookCommand>();
-        unique_ptr<Command> getREcommendation = make_unique<GetRecommendationCommand>();
-
-        while (true) {
-            int selection;
-            cout << "1. Open Library" << endl;
-            cout << "2. Purchase Book" << endl;
-            cout << "3. Get Recommendation" << endl;
-            cout << "4. Logout" << endl;
-            cout << "\nSelect an option: ";
-            cin >> selection;
-
-            switch (selection) {
-            case 1:
-                openLibrary->execute();
-                break;
-            case 2:
-                purchaseBook->execute();
-                break;
-            case 3:
-                getRecommendation->execute();
-                break;
-            case 4:
-                delete openLibrary;
-                delete purchaseBook;
-                delete getRecommendation;
-                return;
-            default:
-                cout << "Invalid selection, select another one: ";
-            }
         }
     }
 };
