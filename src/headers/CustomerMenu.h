@@ -19,10 +19,11 @@ public:
     void executeCommand();
 private:
     vector<unique_ptr<Command>> commands;
-    shared_ptr<Customer> currentUser;
 protected:
     multimap<string, shared_ptr<Book>> books;
+    //shared_ptr<Customer> currentUser;
     fstream bookDB;
+    array<string, 4> kindOfGenre = {"Literature", "Practical", "Non_fiction", "TeenAndChild"};
 };
 
 class Command : public CustomerMenu {
@@ -51,4 +52,4 @@ public:
 class LogoutCommand : public Command {
 public:
     virtual void execute() override;
-}
+};

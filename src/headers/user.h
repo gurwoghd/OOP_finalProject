@@ -10,7 +10,8 @@
 #include <memory>
 #include <map>
 
-#include "headers/BookManager.h"
+#include "BookManager.h"
+#include "BookRecommender.h"
 #include "AdminMenu.h"
 
 using namespace std;
@@ -39,32 +40,46 @@ protected:
 public:
     User(const string& id, const string& pw) : identification(id), password(pw) {}
 
-    string getID() const {
-        return identification;
-    }
+    string getID() const {return identification;}
 
-    string getPW() const {
-        return password;
-    }
+    string getPW() const {return password;}
+
+    virtual void showMenu() = 0;
 };
 
 class Admin : public User {
 public:
+    Admin(const string& id, const string& pw) : User(id, pw) { bookManager = make_shared<BookManager>(); }
+    
+    virtual void showMenu() override { menu->displayCommands(); }
+    
+    shared_ptr<BookManager> getBookManager() const {return bookManager;}
 
 private: 
-    unique_ptr<BookManager> bookManager;
-    unique_ptr<AdminMenu> menu;
+    shared_ptr<BookManager> bookManager;
+    shared_ptr<AdminMenu> menu;
 
     friend class AdminMenu;
 };
 
 class Customer : public User {
 public:
-    Customer() { bookRecommender = make_unique<BookRecommender>(); }
+    Customer(const string& id, const string& pw) : User(id,pw) { bookRecommender = make_unique<BookRecommender>(); }
+    
+    virtual void showMenu() { menu->displayCommands(); }
+    
     void addRecent();
     void showLibrary();
+
+    multimap<string, shared_ptr<Book>> getReadBookHistory() const { return this->readBookHistory; }
+    multimap<string, shared_ptr<Book>> getPurchaseBookHistory() const {return this->purchaseBookHistory;}
+    shared_ptr<BookRecommender> getBookRecommender() const {return this->bookRecommender;}
+
+    
+
 private:
-    unique_ptr<BookRecommender> bookRecommender;
+    shared_ptr<BookRecommender> bookRecommender;
+    unique_ptr<CustomerMenu> menu;
 
     fstream readBookDB;
     fstream purchaseBookDB;
@@ -76,8 +91,8 @@ private:
     friend class OpenLibrary;
     friend class PurchaseBook;
     friend class GetRecommendations;
+    friend class CustomerMenu;
 };
-
 
 class UserManager {
 private:
@@ -87,69 +102,7 @@ private:
 public:
     UserManager() { string filename = "../databases/UserDatabase.txt"; }
 
-    void addNewUser(const string& id, const string& pw) throw(AlreadyExist, DatabaseNotOpen) {
-        // users.push_back(User(id, pw));
-        User user(id, pw);
-        userDB.open(filename);
-        try {
-            if(!userDB.is_open()) throw DatabaseNotOpen();
-            if(alreadyExistID(id)) throw AlreadyExist();
-
-            //////////////////////  사용자 추가 가능함   /////////////////////////////
-            userDB << id << " " << pw << endl;
-            userDB.close();
-        } catch(DatabaseNotOpen& e) {
-            cout << e.what() << endl;
-        } catch(AlreadyExist& e) {
-            cout << e.what() << endl;
-        }
-        
-    };
-
-    // bool checkID(const string& id) const {
-    //     for (const auto& user : users) {
-    //         if (user.getID() == id) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    bool alreadyExistID(const string& id) const {
-        // userDatabase에 해당 아이디가 있으면 에러 발생 = 중복된 아이디 검사 기능
-        string line;
-        while(getline(userDB, line)){
-            string token;
-            stringstream ss(line);
-            vector<string> a;
-            while(getline(ss, token, " ")) {
-                a.push_back(token);
-            }
-            // input ID equals ID in UserDatabase
-            if(a[0] == id) return true;
-        }
-        return false;
-    }
-
-    // bool check(const string& id, const string& pw) const {
-    //     for (const auto& user : users) {
-    //         if (user.getID() == id && user.getPW() == pw) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    bool check(const string& id, const string& pw) const {
-        string line;
-        while(getline(userDB, line)) {
-            string token;
-            stringstream ss(line);
-            vector<string> a;
-            while(getline(ss, token, " ")) a.push_back(token);
-            
-            if(a[0] == id && a[1] == pw) return true;
-        }
-        return false;
-    }
+    void addNewUser(const string& id, const string& pw) throw(AlreadyExist, DatabaseNotOpen);
+    bool alreadyExistID(const string& id) const;
+    bool check(const string& id, const string& pw) const;
 };

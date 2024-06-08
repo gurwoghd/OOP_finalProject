@@ -1,12 +1,16 @@
 #include <iostream>
+#include <string>
+#include <vector>
+#include <array>
 
 #include "headers/CustomerMenu.h"
+#include "headers/User.h"
 
 using namespace std;
 
 CustomerMenu::CustomerMenu() {
     string filepath = "../databases/BookDatabase.txt";
-    bookDB.open(filepath);
+    bookDB.open(filepath, fstream::in);
 
     try {
         // if not opened
@@ -17,7 +21,7 @@ CustomerMenu::CustomerMenu() {
             string token;
             stringstream ss(line);
             vector<string> a;
-            while(getline(ss, token, " ")) {
+            while(getline(ss, token, ' ')) {
                 a.push_back(token);
             }
 
@@ -26,13 +30,14 @@ CustomerMenu::CustomerMenu() {
             else if(a[6] == "Non_fiction") book = make_shared<Non_fiction>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
             else if(a[6] == "Practical") book = make_shared<Practical>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
             else if(a[6] == "TeenAndChild") book = make_shared<TeenAndChild>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
-            books.push_back((book));
+            books.insert(make_pair(a[6], book));
         }
 
+        // command를 추가함
         this->addCommand(make_unique<OpenLibraryCommand>());
         this->addCommand(make_unique<PurchaseBookCommand>());
         this->addCommand(make_unique<GetRecommendationCommand>());
-        this->adCommand(make_unique<LogoutCommand>());
+        this->addCommand(make_unique<LogoutCommand>());
     }catch(DatabaseNotOpen& e) {
         cout << e.what() << endl;
     }
@@ -65,7 +70,7 @@ void CustomerMenu::executeCommand() {
 enum genre {LITERATURE = 1, PRACTICAL, NON_FICTION, TEEN_AND_CHILD};
 
 void OpenLibraryCommand::execute() {
-    genre chosenGenre;
+    int chosenGenre;
     short stay = 1;
     int BookNumber;
 
@@ -74,10 +79,11 @@ void OpenLibraryCommand::execute() {
     cout << "Choose a Genre\n";
     cout << "1.Literature 2. Practical 3. Non_fiction 4. Teen-and Child: ";
     cin >> chosenGenre;
-    if(chosenGenre == LITERATURE) PrintBooks("Literature");
-    else if(chosenGenre == PRACTICAL) PrintBooks("Practical");
-    else if(chosenGenre == NON_FICTION) PrintBooks("Non_fiction");
-    else if(chosenGenre == TEEN_AND_CHILD) PrintBooks("TeenAndChild");
+
+    if(chosenGenre == genre::LITERATURE) PrintBooks("Literature");
+    else if(chosenGenre == genre::PRACTICAL) PrintBooks("Practical");
+    else if(chosenGenre == genre::NON_FICTION) PrintBooks("Non_fiction");
+    else if(chosenGenre == genre::TEEN_AND_CHILD) PrintBooks("TeenAndChild");
 
     while(true) {
         cout << "Select a book to open, or enter 0 to exit the library: ";
@@ -85,7 +91,7 @@ void OpenLibraryCommand::execute() {
 
         if(BookNumber == 0) break;
         else {
-            this->PrintBookInfo(BookNumber);
+            this->PrintBookInfo(kindOfGenre[chosenGenre - 1], BookNumber);
         }
     }
 }
@@ -95,22 +101,26 @@ void Command::PrintBooks(string chosenGenre) {
     int cnt = 1;
     cout << chosenGenre << endl;
     for(auto it = selectedGenreBooksIter.first; it != selectedGenreBooksIter.second; ++it){
-        cout << cnt << ". " << it->second->title << endl;
+        cout << cnt << ". " << it->second->getTitle() << endl;
         cnt++;
     }
 }
 
 void OpenLibraryCommand::PrintBookInfo(string chosenGenre, int BookNumber) {
     auto BooksIter = books.equal_range(chosenGenre);
-    auto selectedBook = (BooksIter.first + BookNumber - 1)->second;
+    auto it = BooksIter.first;
+    for(int i = 0; i < BookNumber;)
+        ++it;
+    --it;
+    auto selectedBook = it->second;
     selectedBook->viewInfo();
 
     // Customer의 readBookHistory에 추가
-    this->currentUser->readBookHistory.insert(make_pair(chosenGenre, selectedBook));
+    this->currentUser->getReadBookHistory().insert(make_pair(chosenGenre, selectedBook));
 }
 
 void PurchaseBookCommand::execute() {
-    genre chosenGenre;
+    int chosenGenre;
     int BookNumber;
     short continuePurchase;
 
@@ -129,7 +139,7 @@ void PurchaseBookCommand::execute() {
         cout << "Enter the number of the book you want to purchase: ";
         cin >> BookNumber;
 
-        this->purchase(chosenGenre, BookNumber);
+        this->purchase(kindOfGenre[chosenGenre - 1], BookNumber);
         cout << "1. Exit 2. Continue purchasing: ";
         cin >> continuePurchase;
 
@@ -144,8 +154,12 @@ void PurchaseBookCommand::execute() {
 
 void PurchaseBookCommand::purchase(string chosenGenre, int BookNumber) {
     auto selectedBookIter = books.equal_range(chosenGenre);
-    auto selectedBook = (selectedBookIter.first + BookNumber - 1)->second;
-    purchaseBookHistory.insert(make_pair(chosenGenre, selectedBook));
+    auto it = selectedBookIter.first;
+    for(int i = 0; i < BookNumber;)
+        ++it;
+    --it;
+    auto selectedBook = it->second;
+    this->currentUser->getPurchaseBookHistory().insert(make_pair(chosenGenre, selectedBook));
 
     cout << selectedBook->getTitle() << " has been successfully purchased" << endl;
 }
@@ -154,7 +168,7 @@ void PurchaseBookCommand::purchase(string chosenGenre, int BookNumber) {
 void GetRecommendationCommand::execute() {
     cout << "\nGet Recommendation selected.\n" << endl;
     // Add further implementation here
-    this->currentUser->bookRecommender->printRecommendation();
+    this->currentUser->getBookRecommender()->printRecommendation();
 }
 
 void LogoutCommand::execute() {

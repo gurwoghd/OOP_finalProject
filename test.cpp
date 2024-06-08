@@ -1,29 +1,27 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <fstream>
-#include <sstream>
 
 using namespace std;
 
-int main(){
-    fstream file;
-    string filename = "databases/UserDatabase.txt";
+class A {
+public:
+    A() { }
+    virtual void show() = 0;
+};
 
-    file.open(filename);
-    if(file.is_open()) {
-        string line;
-        stringstream ss(line);
-        while(getline())
-        vector<string> a = split(line, ' ');
-        
-        getline(file, line);
-        cout << line << endl;
-        cout << a[0] << endl << a[1] << endl;
-        // getline(file, line);
-        // cout << line << endl;
-    }else{
-        cout << "not opened";
-    }
-    file.close();
+class B : public A {
+public:
+    B() : A() { }
+    virtual void show() override { cout << "hello\n"; }
+};
+
+class C {
+public:
+    C(shared_ptr<A> a) : _a(a) { }
+private:
+    shared_ptr<A> _a;
+};
+
+int main01(){
+    cout << "hello\n";
+    return 0;
 }
