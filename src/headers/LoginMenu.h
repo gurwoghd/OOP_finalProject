@@ -12,21 +12,21 @@
 using namespace std;
 
 // Virtual class Command
-class Command {
+class LoginMenuCommand {
 public:
     virtual void execute() = 0;
-    virtual ~Command() {}
+    virtual ~LoginMenuCommand() {}
 };
 
 class LoginMenu {
 private:
-    unique_ptr<vector<shared_ptr<Command>>> commands;
+    unique_ptr<vector<shared_ptr<LoginMenuCommand>>> commands;
     bool logined;    
 public:
     shared_ptr<User> currentUser;
     
     LoginMenu();
-    void addCommands(shared_ptr<Command> command);
+    void addCommands(shared_ptr<LoginMenuCommand> command);
     void display() const;
     bool isLogined() const {return logined;}
     shared_ptr<User> getCurrentUser() const {return this->currentUser;}
@@ -34,7 +34,7 @@ public:
 
 
 // Register and login commands have inheritance from Command, polymorphism
-class RegisterCommand : public Command {
+class RegisterCommand : public LoginMenuCommand {
 private:
     // UserManager is needed in order to add the newly made account into the user vector
     unique_ptr<UserManager> manager;
@@ -45,7 +45,7 @@ public:
     virtual void execute() override;
 };
 
-class LoginasAdmin : public Command {
+class LoginasAdmin : public LoginMenuCommand {
 private:
     unique_ptr<UserManager> manager;
     shared_ptr<User> currentUser;
@@ -56,7 +56,7 @@ public:
     virtual void execute() override;
 };
 
-class LoginasCustomer : public Command {
+class LoginasCustomer : public LoginMenuCommand {
 private:
     unique_ptr<UserManager> manager;
     shared_ptr<User> currentUser;

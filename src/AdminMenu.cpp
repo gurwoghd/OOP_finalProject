@@ -9,6 +9,7 @@
 #include "headers/BookManager.h"
 #include "headers/User.h"
 #include "headers/ErrorClasses.h"
+#include "headers/BookStorage.h"
 
 using namespace std;
 
@@ -42,21 +43,19 @@ BookStorage::BookStorage() {
 }
 
 AdminMenu::AdminMenu() {
-    this->addCommand(make_shared<ManageCommands>());
-    this->addCommand(make_shared<AddBook>());
-    this->addCommand(make_shared<DeleteBook>());
+    bs = make_shared<BookStorage>();
+
+    this->addCommand(make_shared<ManageCommands>(bs));
+    this->addCommand(make_shared<AddBook>(bs));
+    this->addCommand(make_shared<DeleteBook>(bs));
 }
 
-void AdminMenu::addCommand(shared_ptr<Command> command) {
+void AdminMenu::addCommand(shared_ptr<AdminMenuCommand> command) {
     this->commands.push_back(command);
 }
 
 void AdminMenu::displayCommands() {
     int selection;
-    int chosenGenre;
-    array<string, 4> genres = {"Literature", "Practical", "Non-Fiction", "Teen-and Child"};
-    string title, publishDate, author, publisher, language, bookGenre;
-    float price;
     cout << "Welcome Admin" << endl << endl;
 
     while(true) {
@@ -71,8 +70,12 @@ void AdminMenu::displayCommands() {
 }
 
 void AddBook::execute() {
+    int chosenGenre;
+    array<string, 4> genres = {"Literature", "Practical", "Non-Fiction", "Teen-and Child"};
+    string title, publishDate, author, publisher, language, bookGenre;
+    float price;
     try {
-        bs->bookDB.open(filepath);
+        bs->bookDB.open(bs->filepath);
         if(bs->bookDB.is_open()) throw(DatabaseNotOpen);
 
         cout << "Select the Genre of the book to add" << endl << endl;
@@ -91,14 +94,14 @@ void AddBook::execute() {
 
         bs->books.insert(make_pair(bs->kindOfGenre[chosenGenre - 1], make_shared<Book>(publishDate, title, author, publisher, language, price, bookGenre)));
         // bookDB에 업데이트
-        bookDB << publishDate << " "
+        bs->bookDB << publishDate << " "
                 << title << " "
                 << author << " "
                 << publisher << " "
-                << langauage << " "
+                << language << " "
                 << to_string(price) << " "
                 << bookGenre << endl;
-        bookDB.close();
+        bs->bookDB.close();
     } catch(DatabaseNotOpen& e){
         cout << e.what() << endl;
     }

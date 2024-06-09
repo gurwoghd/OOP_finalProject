@@ -7,58 +7,50 @@
 
 #include "Book.h"
 #include "User.h"
+#include "ErrorClasses.h"
+#include "BookStorage.h"
 
 using namespace std;
 
-class BookStorage {
-public:
-    BookStorage();
-public: 
-/////////////// 여기서 public으로 설정하는 거 괜춘?????
-    multimap<string, shared_ptr<Book>> books;
-    //shared_ptr<Customer> currentUser;
-    fstream bookDB;
-    array<string, 4> kindOfGenre = {"Literature", "Practical", "Non_fiction", "TeenAndChild"};
-    string filepath = "../databases/BookDatabase.txt";
-};
 
-class Command {
+class AdminMenuCommand {
 public:
-    Command(shared_ptr<BookStorage> _bs) : bs(_bs) { }
+    AdminMenuCommand(shared_ptr<BookStorage> _bs) : bs(_bs) { }
 
     virtual void execute() = 0;
-    virtual ~Command() {}
-private:
-    shared_ptr<BookStroage> bs;
+    virtual ~AdminMenuCommand() {}
+protected:
+    shared_ptr<BookStorage> bs;
 };
 
 class AdminMenu {
 public:
     AdminMenu();
 
-    void addCommand(shared_ptr<Command> command);
+    void addCommand(shared_ptr<AdminMenuCommand> command);
     void displayCommands();
 private:
-    vector<shared_ptr<Command>> commands;
+    vector<shared_ptr<AdminMenuCommand>> commands;
+    shared_ptr<BookStorage> bs;
 };
 
 // abstract
-class ManageCommands : public Command {
+class ManageCommands : public AdminMenuCommand {
 public:
-    ManageCommands(shared_ptr<BookStorage> _bs) : Command(_bs) { }
+    ManageCommands(shared_ptr<BookStorage> _bs) : AdminMenuCommand(_bs) { }
 
     virtual void execute() override;
 };
 
-class AddBook : public Command {
+class AddBook : public AdminMenuCommand {
 public:
-    AddBook(shared_ptr<BookStorage> _bs) : Command(_bs) { }
+    AddBook(shared_ptr<BookStorage> _bs) : AdminMenuCommand(_bs) { }
     virtual void execute() override;
 };
 
-class DeleteBook : public Command {
+class DeleteBook : public AdminMenuCommand {
 public:
-    DeleteBook(shared_ptr<BookStorage> _bs) : Command(_bs) { }
+    DeleteBook(shared_ptr<BookStorage> _bs) : AdminMenuCommand(_bs) { }
 
     void printBooks(string selectedGenre) const;
     virtual void execute() override;

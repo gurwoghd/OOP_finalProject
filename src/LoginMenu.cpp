@@ -16,7 +16,7 @@ LoginMenu::LoginMenu() : currentUser(NULL), logined(false) {
     this->addCommands(make_shared<LoginasCustomer>(make_unique<UserManager>()));
 }
 
-void LoginMenu::addCommands(shared_ptr<Command> command) {
+void LoginMenu::addCommands(shared_ptr<LoginMenuCommand> command) {
     commands->push_back(command);
 }
 
