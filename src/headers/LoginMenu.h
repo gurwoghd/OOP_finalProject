@@ -20,13 +20,16 @@ public:
 
 class LoginMenu {
 private:
-    unique_ptr<vector<Command>> commands;
-        
+    unique_ptr<vector<shared_ptr<Command>>> commands;
+    bool logined;    
 public:
     shared_ptr<User> currentUser;
-
-    LoginMenu(shared_ptr<User> _user) : currentUser(_user) { }
-    void display();
+    
+    LoginMenu();
+    void addCommands(shared_ptr<Command> command);
+    void display() const;
+    bool isLogined() const {return logined;}
+    shared_ptr<User> getCurrentUser() const {return this->currentUser;}
 };
 
 
@@ -34,31 +37,31 @@ public:
 class RegisterCommand : public Command {
 private:
     // UserManager is needed in order to add the newly made account into the user vector
-    UserManager& manager;
+    unique_ptr<UserManager> manager;
 public:
-    RegisterCommand(UserManager& manager) : manager(manager) {}
+    RegisterCommand(unique_ptr<UserManager> manager) : manager(move(manager)) {}
 
     // Override execute from virtual class Command, polymorphism
-    void execute() override;
+    virtual void execute() override;
 };
 
 class LoginasAdmin : public Command {
 private:
-    UserManager& manager;
+    unique_ptr<UserManager> manager;
     shared_ptr<User> currentUser;
 public:
-    LoginasAdmin(UserManager& manager) : manager(manager) {  }
+    LoginasAdmin(unique_ptr<UserManager> manager) : manager(move(manager)) {  }
 
     // Override execute from virtual class Command
-    void execute() override;
+    virtual void execute() override;
 };
 
 class LoginasCustomer : public Command {
 private:
-    UserManager& manager;
+    unique_ptr<UserManager> manager;
     shared_ptr<User> currentUser;
 public:
-    LoginasCustomer(UserManager& manager) : manager(manager) { }
+    LoginasCustomer(unique_ptr<UserManager> manager) : manager(move(manager)) { }
     // Override execute from virtual class Command
-    void execute() override;
+    virtual void execute() override;
 };

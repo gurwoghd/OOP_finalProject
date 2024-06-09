@@ -64,9 +64,9 @@ private:
 
 class Customer : public User {
 public:
-    Customer(const string& id, const string& pw) : User(id,pw) { bookRecommender = make_unique<BookRecommender>(); }
+    Customer(const string& id, const string& pw) : User(id,pw), menu(make_unique<CustomerMenu>()) { bookRecommender = make_unique<BookRecommender>(); }
     
-    virtual void showMenu() { menu->displayCommands(); }
+    virtual void showMenu() { this->menu->displayCommands(); }
     
     void addRecent();
     void showLibrary();
@@ -75,12 +75,11 @@ public:
     multimap<string, shared_ptr<Book>> getPurchaseBookHistory() const {return this->purchaseBookHistory;}
     shared_ptr<BookRecommender> getBookRecommender() const {return this->bookRecommender;}
 
-    
-
+    class CustomerMenu;
 private:
     shared_ptr<BookRecommender> bookRecommender;
     unique_ptr<CustomerMenu> menu;
-
+    
     fstream readBookDB;
     fstream purchaseBookDB;
 

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <memory>
+
+
 #include "Command.h"
 #include "User.h"
 #include "LoginMenu.h"
@@ -9,9 +11,15 @@ int main() {
     UserManager manager;
     shared_ptr<User> currentUser;
 
-    LoginMenu loginMenu(currentUser);
+    unique_ptr<LoginMenu> loginMenu = make_unique<LoginMenu>();
 
-    loginMenu.display();
+    loginMenu->display();
+
+    
+    if(loginMenu->isLogined()) { // if user is logined, show user's menu (admin or customer)
+        currentUser = loginMenu->getCurrentUser();
+        currentUser->showMenu();
+    }
 
     return 0;
 }

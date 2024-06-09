@@ -7,37 +7,37 @@
 
 #include "Book.h"
 #include "User.h"
-#include "LoginMenu.h"
 
 using namespace std;
 
+class Command {
+public:
+    virtual void execute() = 0;
+    virtual ~Command() {}
+};
+
 class AdminMenu {
 public:
+    AdminMenu();
+
     void addCommand(shared_ptr<Command> command);
     void displayCommands();
-    void executeCommand();
-}
+private:
+    vector<shared_ptr<Command>> commands;
+};
 
 // abstract
 class ManageCommands : public Command {
 public:
-    void execute();
-}
+    virtual void execute() override;
+};
 
 class AddBook : public ManageCommands {
 public:
-    void execute();
-}
+    virtual void execute() override;
+};
 
 class DeleteBook : public ManageCommands {
 public:
-    void execute();
-}
-
-void addAction() {
-
-}
-
-void deleteAction() {
-    
-}
+    virtual void execute() override;
+};

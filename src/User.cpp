@@ -12,13 +12,13 @@ using namespace std;
 
 void UserManager::addNewUser(const string& id, const string& pw) throw(AlreadyExist, DatabaseNotOpen) {
     // users.push_back(User(id, pw));
-    User user(id, pw);
+    unique_ptr<User> user = make_unique<Customer>(id, pw);
     userDB.open(filename);
     try {
         if (!userDB.is_open()) throw DatabaseNotOpen();
-        if (alreadyExistID(id)) throw AlreadyExist();
+        if (alreadyExistID(user->getID())) throw AlreadyExist();
 
-        //////////////////////  »ç¿ëÀÚ Ãß°¡ °¡´ÉÇÔ   /////////////////////////////
+        //////////////////////  ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   /////////////////////////////
         userDB << id << " " << pw << endl;
         userDB.close();
     }
@@ -32,7 +32,6 @@ void UserManager::addNewUser(const string& id, const string& pw) throw(AlreadyEx
 }
 
 bool UserManager::alreadyExistID(const string& id) const {
-    // userDatabase¿¡ ÇØ´ç ¾ÆÀÌµð°¡ ÀÖÀ¸¸é ¿¡·¯ ¹ß»ý = Áßº¹µÈ ¾ÆÀÌµð °Ë»ç ±â´É
     string line;
     fstream readUserDB;
     readUserDB.open(filename, fstream::in);

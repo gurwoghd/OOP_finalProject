@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 using namespace std;
 
@@ -21,7 +22,8 @@ private:
     shared_ptr<A> _a;
 };
 
-int main01(){
-    cout << "hello\n";
+int main(){
+    shared_ptr<A> a;
+    auto c = make_unique<C>(a);
     return 0;
 }
