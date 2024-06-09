@@ -68,8 +68,3 @@ public:
 
     virtual void execute() override;
 };
-
-class LogoutCommand : public Command {
-public:
-    virtual void execute() override;
-};

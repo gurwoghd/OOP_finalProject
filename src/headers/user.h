@@ -13,6 +13,7 @@
 #include "BookManager.h"
 #include "BookRecommender.h"
 #include "AdminMenu.h"
+#include "CustomerMenu.h"
 
 using namespace std;
 
@@ -71,25 +72,21 @@ public:
     void addRecent();
     void showLibrary();
 
-    multimap<string, shared_ptr<Book>> getReadBookHistory() const { return this->readBookHistory; }
-    multimap<string, shared_ptr<Book>> getPurchaseBookHistory() const {return this->purchaseBookHistory;}
-    shared_ptr<BookRecommender> getBookRecommender() const {return this->bookRecommender;}
+    static multimap<string, shared_ptr<Book>> getReadBookHistory() { return readBookHistory; }
+    static multimap<string, shared_ptr<Book>> getPurchaseBookHistory() {return purchaseBookHistory;}
+    static shared_ptr<BookRecommender> getBookRecommender() {return bookRecommender;}
 
-    class CustomerMenu;
 private:
-    shared_ptr<BookRecommender> bookRecommender;
+    static shared_ptr<BookRecommender> bookRecommender;
     unique_ptr<CustomerMenu> menu;
     
     fstream readBookDB;
     fstream purchaseBookDB;
 
-    multimap<string, shared_ptr<Book>> readBookHistory;
-    multimap<string, shared_ptr<Book>> purchaseBookHistory;
+    static multimap<string, shared_ptr<Book>> readBookHistory;
+    static multimap<string, shared_ptr<Book>> purchaseBookHistory;
     
     friend class BookRecommender;
-    friend class OpenLibrary;
-    friend class PurchaseBook;
-    friend class GetRecommendations;
     friend class CustomerMenu;
 };
 

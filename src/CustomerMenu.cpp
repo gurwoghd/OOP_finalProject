@@ -44,7 +44,6 @@ CustomerMenu::CustomerMenu() {
     this->addCommand(make_unique<OpenLibraryCommand>(bs));
     this->addCommand(make_unique<PurchaseBookCommand>(bs));
     this->addCommand(make_unique<GetRecommendationCommand>(bs));
-    this->addCommand(make_unique<LogoutCommand>());
 }
 
 void CustomerMenu::addCommand(unique_ptr<Command> com) {
@@ -63,6 +62,7 @@ void CustomerMenu::displayCommands() {
         cin >> selection;
 
         if(selection >= commands.size()) cout << "Invalid selection, select another one: ";
+        else if(selection == commands.size() - 1) break;
         else this->commands[selection-1]->execute();
     }
 }
@@ -116,7 +116,7 @@ void OpenLibraryCommand::PrintBookInfo(string chosenGenre, int BookNumber) {
     selectedBook->viewInfo();
 
     // Customer의 readBookHistory에 추가
-    getReadBookHistory().insert(make_pair(chosenGenre, selectedBook));
+    Customer::getReadBookHistory().insert(make_pair(chosenGenre, selectedBook));
 }
 
 void PurchaseBookCommand::execute() {
@@ -159,7 +159,7 @@ void PurchaseBookCommand::purchase(string chosenGenre, int BookNumber) {
         ++it;
     --it;
     auto selectedBook = it->second;
-    this->currentUser->getPurchaseBookHistory().insert(make_pair(chosenGenre, selectedBook));
+    Customer::getPurchaseBookHistory().insert(make_pair(chosenGenre, selectedBook));
 
     cout << selectedBook->getTitle() << " has been successfully purchased" << endl;
 }
@@ -168,9 +168,5 @@ void PurchaseBookCommand::purchase(string chosenGenre, int BookNumber) {
 void GetRecommendationCommand::execute() {
     cout << "\nGet Recommendation selected.\n" << endl;
     // Add further implementation here
-    this->currentUser->getBookRecommender()->printRecommendation();
-}
-
-void LogoutCommand::execute() {
-
+    Customer::getBookRecommender()->printRecommendation();
 }
