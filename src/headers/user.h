@@ -14,26 +14,9 @@
 #include "BookRecommender.h"
 #include "AdminMenu.h"
 #include "CustomerMenu.h"
+#include "ErrorClasses.h"
 
 using namespace std;
-
-//////////////////////  Exception clsses  ///////////////////////////////////
-class AlreadyExist : public exception {
-public:
-    virtual string what() {
-        return "User already exsits\n";
-    }
-};
-
-class DatabaseNotOpen : public exception {
-public:
-    virtual string what()  {
-        return "File not opened\n";
-    }
-};
-
-///////////////////////////////////////////////////////////////
-
 class User {
 protected:
     string identification;
@@ -54,10 +37,10 @@ public:
     
     virtual void showMenu() override { menu->displayCommands(); }
     
-    shared_ptr<BookManager> getBookManager() const {return bookManager;}
+    static shared_ptr<BookManager> getBookManager() {return bookManager;}
 
 private: 
-    shared_ptr<BookManager> bookManager;
+    static shared_ptr<BookManager> bookManager;
     shared_ptr<AdminMenu> menu;
 
     friend class AdminMenu;

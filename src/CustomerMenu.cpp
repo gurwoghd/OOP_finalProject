@@ -33,6 +33,7 @@ BookStorage::BookStorage() {
             else if(a[6] == "TeenAndChild") book = make_shared<TeenAndChild>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
             books.insert(make_pair(a[6], book));
         }
+        bookDB.close();
     }catch(DatabaseNotOpen& e) {
         cout << e.what() << endl;
     }
@@ -51,7 +52,6 @@ void CustomerMenu::addCommand(unique_ptr<Command> com) {
 }
 
 void CustomerMenu::displayCommands() {
-
     while (true) {
         int selection;
         cout << "1. Open Library" << endl;
@@ -61,7 +61,7 @@ void CustomerMenu::displayCommands() {
         cout << "\nSelect an option: ";
         cin >> selection;
 
-        if(selection >= commands.size()) cout << "Invalid selection, select another one: ";
+        if(selection >= commands.size() || selection <= 0) cout << "Invalid selection, select another one: ";
         else if(selection == commands.size() - 1) break;
         else this->commands[selection-1]->execute();
     }
