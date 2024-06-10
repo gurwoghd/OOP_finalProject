@@ -12,14 +12,12 @@
 
 #include "BookManager.h"
 #include "BookRecommender.h"
-#include "AdminMenu.h"
-#include "CustomerMenu.h"
 #include "ErrorClasses.h"
 
 using namespace std;
 
-class AdminMenu;
 class CustomerMenu;
+class AdminMenu;
 
 class User {
 protected:
@@ -57,7 +55,7 @@ class Customer : public User {
 public:
     Customer(const string& id, const string& pw) : User(id,pw) { 
         bookRecommender = make_unique<BookRecommender>(); 
-        menu = make_shared<CusotmerMenu>();
+        menu = make_shared<CustomerMenu>();
     }
     
     virtual void showMenu() { this->menu->displayCommands(); }

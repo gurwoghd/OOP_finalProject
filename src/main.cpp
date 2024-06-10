@@ -1,10 +1,8 @@
 #include <iostream>
 #include <memory>
 
-
-#include "Command.h"
-#include "User.h"
-#include "LoginMenu.h"
+#include "headers/User.h"
+#include "headers/LoginMenu.h"
 
 
 int main() {

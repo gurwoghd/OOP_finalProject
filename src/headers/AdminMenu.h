@@ -12,6 +12,8 @@
 
 using namespace std;
 
+class AdminMenu;
+
 
 class AdminMenuCommand {
 public:

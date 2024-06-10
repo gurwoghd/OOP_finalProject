@@ -13,7 +13,6 @@
 
 using namespace std;
 
-
 AdminMenu::AdminMenu() {
     bs = make_shared<BookStorage>();
 

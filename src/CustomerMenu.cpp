@@ -5,7 +5,6 @@
 #include <array>
 
 #include "headers/CustomerMenu.h"
-#include "headers/User.h"
 
 using namespace std;
 
@@ -17,7 +16,7 @@ CustomerMenu::CustomerMenu() {
     this->addCommand(make_shared<GetRecommendationCommand>(bs));
 }
 
-void CustomerMenu::addCommand(shard_ptr<CustomerMenuCommand> com) {
+void CustomerMenu::addCommand(shared_ptr<CustomerMenuCommand> com) {
     commands.push_back(move(com));
 }
 

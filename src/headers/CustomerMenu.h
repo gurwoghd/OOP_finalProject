@@ -8,10 +8,11 @@
 #include <memory>
 #include <map>
 
-#include "User.h"
 #include "ErrorClasses.h"
 #include "BookStorage.h"
+#include "User.h"
 
+class CustomerMenu;
 
 class CustomerMenuCommand {
 public:
@@ -33,8 +34,6 @@ public:
 private:
     vector<shared_ptr<CustomerMenuCommand>> commands;
     shared_ptr<BookStorage> bs;
-protected:
-    
 };
 
 class OpenLibraryCommand : public CustomerMenuCommand {
