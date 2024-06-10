@@ -17,6 +17,10 @@
 #include "ErrorClasses.h"
 
 using namespace std;
+
+class AdminMenu;
+class CustomerMenu;
+
 class User {
 protected:
     string identification;
@@ -33,7 +37,10 @@ public:
 
 class Admin : public User {
 public:
-    Admin(const string& id, const string& pw) : User(id, pw) { bookManager = make_shared<BookManager>(); }
+    Admin(const string& id, const string& pw) : User(id, pw) { 
+        bookManager = make_shared<BookManager>();
+        menu = make_shared<AdminMenu>();    
+    }
     
     virtual void showMenu() override { menu->displayCommands(); }
     
@@ -48,7 +55,10 @@ private:
 
 class Customer : public User {
 public:
-    Customer(const string& id, const string& pw) : User(id,pw), menu(make_unique<CustomerMenu>()) { bookRecommender = make_unique<BookRecommender>(); }
+    Customer(const string& id, const string& pw) : User(id,pw) { 
+        bookRecommender = make_unique<BookRecommender>(); 
+        menu = make_shared<CusotmerMenu>();
+    }
     
     virtual void showMenu() { this->menu->displayCommands(); }
     
@@ -61,7 +71,7 @@ public:
 
 private:
     static shared_ptr<BookRecommender> bookRecommender;
-    unique_ptr<CustomerMenu> menu;
+    shared_ptr<CustomerMenu> menu;
     
     fstream readBookDB;
     fstream purchaseBookDB;

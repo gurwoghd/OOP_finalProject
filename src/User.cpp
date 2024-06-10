@@ -6,7 +6,11 @@
 #include <array>
 
 #include "headers/User.h"
+#include "headers/AdminMenu.h"
+#include "headers/CustomerMenu.h"
 
+class CustomerMenu;
+class AdminMenu;
 
 using namespace std;
 

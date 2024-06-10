@@ -13,39 +13,10 @@
 
 using namespace std;
 
-BookStorage::BookStorage() {
-    bookDB.open(filepath, fstream::in);
-
-    try {
-        // if not opened
-        if(!bookDB.is_open()) throw DatabaseNotOpen();
-        // books 벡터 만들기
-        string line;
-        while(getline(bookDB, line)) {
-            string token;
-            stringstream ss(line);
-            vector<string> a;
-            while(getline(ss, token, ' ')) {
-                a.push_back(token);
-            }
-
-            shared_ptr<Book> book;
-            if(a[6] == "Literature") book = make_shared<Literature>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
-            else if(a[6] == "Non_fiction") book = make_shared<Non_fiction>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
-            else if(a[6] == "Practical") book = make_shared<Practical>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
-            else if(a[6] == "TeenAndChild") book = make_shared<TeenAndChild>(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
-            books.insert(make_pair(a[6], book));
-        }
-        bookDB.close();
-    }catch(DatabaseNotOpen& e) {
-        cout << e.what() << endl;
-    }
-}
 
 AdminMenu::AdminMenu() {
     bs = make_shared<BookStorage>();
 
-    this->addCommand(make_shared<ManageCommands>(bs));
     this->addCommand(make_shared<AddBook>(bs));
     this->addCommand(make_shared<DeleteBook>(bs));
 }
@@ -76,7 +47,7 @@ void AddBook::execute() {
     float price;
     try {
         bs->bookDB.open(bs->filepath);
-        if(bs->bookDB.is_open()) throw(DatabaseNotOpen);
+        if(bs->bookDB.is_open()) throw(DatabaseNotOpen());
 
         cout << "Select the Genre of the book to add" << endl << endl;
         cout << "1. Literature 2. Practical 3. Non-Fiction 4. Teen-and Child: ";
@@ -109,7 +80,7 @@ void AddBook::execute() {
 
 void DeleteBook::execute() {
     string title; // title of book to delete
-    array<string, 4> genres = {"Literature", "Pracitcal" , "Non-Fiction" , "Teen-and Child"};
+    array<string, 4> genres = {"Literature", "Practical" , "Non-Fiction" , "Teen-and Child"};
     int chosenGenre;
 
     cout << "Select the Genre of the book to delete" << endl << endl;
@@ -142,9 +113,4 @@ void DeleteBook::printBooks(string selectedGenre) const {
     for(auto it = rangeIter.first; it != rangeIter.second; ++it){
         cout << idx << ". " << it->second->getTitle() << endl;
     }
-}
-
-// 근데 ManageCommands는 무슨 기능???
-void ManageCommands::execute() {
-
 }

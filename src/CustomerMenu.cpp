@@ -9,16 +9,15 @@
 
 using namespace std;
 
-
 CustomerMenu::CustomerMenu() {
     bs = make_shared<BookStorage>();
     // command를 추가함
-    this->addCommand(make_unique<OpenLibraryCommand>(bs));
-    this->addCommand(make_unique<PurchaseBookCommand>(bs));
-    this->addCommand(make_unique<GetRecommendationCommand>(bs));
+    this->addCommand(make_shared<OpenLibraryCommand>(bs));
+    this->addCommand(make_shared<PurchaseBookCommand>(bs));
+    this->addCommand(make_shared<GetRecommendationCommand>(bs));
 }
 
-void CustomerMenu::addCommand(unique_ptr<CustomerMenuCommand> com) {
+void CustomerMenu::addCommand(shard_ptr<CustomerMenuCommand> com) {
     commands.push_back(move(com));
 }
 

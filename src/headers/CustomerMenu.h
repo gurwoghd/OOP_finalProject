@@ -12,20 +12,8 @@
 #include "ErrorClasses.h"
 #include "BookStorage.h"
 
-class CustomerMenu {
-public:
-    CustomerMenu();
 
-    void addCommand(unique_ptr<CustomerMenuCommand> com);
-    void displayCommands();
-private:
-    vector<unique_ptr<CustomerMenuCommand>> commands;
-    shared_ptr<BookStorage> bs;
-protected:
-    
-};
-
-class CustomerMenuCommand{
+class CustomerMenuCommand {
 public:
     CustomerMenuCommand(shared_ptr<BookStorage> _bs) : bs(_bs) { }
 
@@ -33,6 +21,20 @@ public:
     void PrintBooks(string chosenGenre);
 protected:
     shared_ptr<BookStorage> bs;
+};
+
+
+class CustomerMenu {
+public:
+    CustomerMenu();
+
+    void addCommand(shared_ptr<CustomerMenuCommand> com);
+    void displayCommands();
+private:
+    vector<shared_ptr<CustomerMenuCommand>> commands;
+    shared_ptr<BookStorage> bs;
+protected:
+    
 };
 
 class OpenLibraryCommand : public CustomerMenuCommand {

@@ -34,14 +34,6 @@ private:
     shared_ptr<BookStorage> bs;
 };
 
-// abstract
-class ManageCommands : public AdminMenuCommand {
-public:
-    ManageCommands(shared_ptr<BookStorage> _bs) : AdminMenuCommand(_bs) { }
-
-    virtual void execute() override;
-};
-
 class AddBook : public AdminMenuCommand {
 public:
     AddBook(shared_ptr<BookStorage> _bs) : AdminMenuCommand(_bs) { }

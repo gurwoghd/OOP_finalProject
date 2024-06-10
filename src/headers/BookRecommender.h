@@ -29,7 +29,7 @@ private:
     multimap<string, int> genreCount;
     multimap<string, int> authorCount;
     multimap<string, int> languageCount;
-    multimap<string, unique_ptr<DetailGenre>> detailGenre;
+    multimap<string, int> detailGenre;
     multimap<string, unique_ptr<Book>> recommendResult;    
 };
 
