@@ -15,6 +15,8 @@ using namespace std;
 multimap<string, Book*> Customer::accessedBooks;
 multimap<string, Book*> Customer::purchasedBooks;
 BookRecommender* Customer::bookRecommender;
+bool LoginMenu::logined;
+User* LoginMenu::currentUser;
 
 //origin AdminMenu.cpp
 
@@ -38,10 +40,9 @@ void Admin::AdminMenu::displayCommands() {
         std::cout << "1. Add a book 2. Delete a book 3. Logout: ";
         std::cin >> selection;
 
-        if (selection >= commands.size() || selection <= 0)
-            std::cout << "Invalid selection, select another one: ";
-        else if (selection == commands.size() + 1)
-            break;
+        if (selection == commands.size() + 1) break;
+        else if (selection > commands.size() || selection <= 0)
+            std::cout << "Invalid selection, select another one: " << std::endl;
         else
             this->commands[selection - 1]->execute();
     }
@@ -51,7 +52,7 @@ void Admin::AddBook::execute() {
     int chosenGenre;
     array<string, 4> genres = { "Literature", "Practical", "Non-Fiction",
                                "Teen-and Child" };
-    string title, publishDate, author, publisher, language, bookGenre;
+    string title, publishDate, author, publisher, language, bookGenre, detailBookGenre;
     float price;
     try {
         bs->bookDB.open(bs->filepath);
@@ -78,11 +79,13 @@ void Admin::AddBook::execute() {
         std::cin >> language;
         std::cout << "Enter the genre: ";
         std::cin >> bookGenre;
+        std::cout << "Enter the detail of the genre: ";
+        std::cin >> detailBookGenre;
 
         bs->books.insert(
             make_pair(bs->kindOfGenre[chosenGenre - 1],
                 new Book(publishDate, title, author, publisher,
-                    language, price, bookGenre)));
+                    language, price, bookGenre, detailBookGenre)));
         // bookDB�� ������Ʈ
         bs->bookDB << publishDate << " " << title << " " << author << " "
             << publisher << " " << language << " " << to_string(price) << " "
@@ -117,9 +120,6 @@ void Admin::DeleteBook::execute() {
             break;
         }
     }
-    // �����ͺ��̽����� ����
-    // �����ͺ��̽����� title�� ��ġ�ϴ� ������ �����ϴ� ������ ã�Ƽ� �� ���θ�
-    // ���������� ������ ��
 }
 
 void Admin::DeleteBook::printBooks(string selectedGenre) const {
@@ -132,6 +132,7 @@ void Admin::DeleteBook::printBooks(string selectedGenre) const {
 
 //origin Book.cpp
 void Book::viewInfo() const {
+    std::cout << std::endl;
     std::cout << this->getTitle() << endl;
     std::cout << "Date: " << this->getDate() << endl;
     std::cout << "Price: " << this->getPrice() << endl;
@@ -139,6 +140,7 @@ void Book::viewInfo() const {
     std::cout << "Publisher: " << this->getPublisher() << endl;
     std::cout << "Language: " << this->getLang() << endl;
     std::cout << "Genre: " << this->getGenre() << endl;
+    std::cout << std::endl;
 }
 
 //origin BookManager.cpp
@@ -151,7 +153,6 @@ void BookManager::addBook(Book& book, string genre) {
 void BookManager::deleteBook(string genre, string title) {
     auto rangeIter = books.equal_range(genre);
     for (auto it = rangeIter.first; it != rangeIter.second; ++it) {
-        // it->first�� key, second�� value�̴�.
         if (it->second->title == title) {
             books.erase(it);
             break;
@@ -168,28 +169,25 @@ BookStorage::BookStorage() {
         // if not opened
         if (!bookDB.is_open())
             throw DatabaseNotOpen("BookStorage::BookStorage");
-        // books ���� �����
+        
         string line;
         while (getline(bookDB, line)) {
             string token;
             stringstream ss(line);
             vector<string> a;
-            while (getline(ss, token, ' ')) {
+            while (getline(ss, token, ',')) {
                 a.push_back(token);
             }
 
             Book* book;
             if (a[6] == "Literature")
-                book =
-                new (Literature)(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
+                book = new Literature(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[7]);
             else if (a[6] == "Non_fiction")
-                book =
-                new (Non_fiction)(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
+                book = new (Non_fiction)(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[7]);
             else if (a[6] == "Practical")
-                book = new (Practical)(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
+                book = new (Practical)(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[7]);
             else if (a[6] == "TeenAndChild")
-                book =
-                new (TeenAndChild)(a[0], a[1], a[2], a[3], a[4], stof(a[5]));
+                book = new (TeenAndChild)(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[7]);
             books.insert(make_pair(a[6], book));
         }
         bookDB.close();
@@ -203,7 +201,6 @@ BookStorage::BookStorage() {
 
 Customer::CustomerMenu::CustomerMenu() {
     bs = new BookStorage();
-    // command�� �߰���
     this->addCommand(new OpenLibraryCommand(bs));
     this->addCommand(new PurchaseBookCommand(bs));
     this->addCommand(new GetRecommendationCommand(bs));
@@ -223,10 +220,9 @@ void Customer::CustomerMenu::displayCommands() {
         std::cout << "\nSelect an option: ";
         std::cin >> selection;
 
-        if (selection >= commands.size() || selection <= 0)
+        if (selection == commands.size() + 1) break;
+        else if (selection > commands.size() || selection <= 0)
             std::cout << "Invalid selection, select another one: ";
-        else if (selection == commands.size() + 1)
-            break;
         else
             this->commands[selection - 1]->execute();
     }
@@ -246,17 +242,24 @@ void Customer::OpenLibraryCommand::execute() {
     std::cout << "1.Literature 2. Practical 3. Non_fiction 4. Teen-and Child: ";
     std::cin >> chosenGenre;
 
-    if (chosenGenre == genre::LITERATURE)
+    if (chosenGenre == genre::LITERATURE){
+        if(empty("Literature")) { std::cout << "Empty\n\n"; return;}
         PrintBooks("Literature");
-    else if (chosenGenre == genre::PRACTICAL)
+    }
+    else if (chosenGenre == genre::PRACTICAL){
+        if(empty("Practical")) { std::cout << "Empty\n\n"; return;}
         PrintBooks("Practical");
-    else if (chosenGenre == genre::NON_FICTION)
+    } else if (chosenGenre == genre::NON_FICTION) {
+        if(empty("Non_fiction")) { std::cout << "Empty\n\n"; return;}
         PrintBooks("Non_fiction");
-    else if (chosenGenre == genre::TEEN_AND_CHILD)
+    }
+    else if (chosenGenre == genre::TEEN_AND_CHILD) {
+        if(empty("TeenAndChild")) { std::cout << "Empty\n\n"; return;}
         PrintBooks("TeenAndChild");
+    }
 
     while (true) {
-        std::cout << "Select a book to open, or enter 0 to exit the library: ";
+        std::cout << "\nSelect a book to open, or enter 0 to exit the library: ";
         std::cin >> BookNumber;
 
         if (BookNumber == 0)
@@ -278,7 +281,6 @@ void Customer::CustomerMenuCommand::PrintBooks(string chosenGenre) {
     }
 }
 
-typedef multimap<string, Book*> (*f)();
 void Customer::OpenLibraryCommand::PrintBookInfo(string chosenGenre, int BookNumber) {
     auto BooksIter = bs->books.equal_range(chosenGenre);
     auto it = BooksIter.first;
@@ -304,15 +306,21 @@ void Customer::PurchaseBookCommand::execute() {
     std::cout << "1. Literature 2. Practical 3. Non-fiction 4. Teen-and Child: ";
     std::cin >> chosenGenre;
 
-    if (chosenGenre == LITERATURE)
-        this->PrintBooks("Literature");
-    else if (chosenGenre == PRACTICAL)
-        this->PrintBooks("Practical");
-    else if (chosenGenre == NON_FICTION)
-        this->PrintBooks("Non_fiction");
-    else if (chosenGenre == TEEN_AND_CHILD)
-        this->PrintBooks("TeenAndChild");
-
+    if (chosenGenre == genre::LITERATURE){
+        if(empty("Literature")) { std::cout << "Empty\n\n"; return;}
+        PrintBooks("Literature");
+    }
+    else if (chosenGenre == genre::PRACTICAL){
+        if(empty("Practical")) { std::cout << "Empty\n\n"; return;}
+        PrintBooks("Practical");
+    } else if (chosenGenre == genre::NON_FICTION) {
+        if(empty("Non_fiction")) { std::cout << "Empty\n\n"; return;}
+        PrintBooks("Non_fiction");
+    }
+    else if (chosenGenre == genre::TEEN_AND_CHILD) {
+        if(empty("TeenAndChild")) { std::cout << "Empty\n\n"; return;}
+        PrintBooks("TeenAndChild");
+    }
     while (true) {
         std::cout << "Enter the number of the book you want to purchase: ";
         std::cin >> BookNumber;
@@ -353,11 +361,12 @@ void Customer::GetRecommendationCommand::execute() {
 }
 
 //origin LoginMenu.cpp
-//������ (���� ���� �ٲ���..)
-LoginMenu::LoginMenu() : logined(false), currentUser(nullptr) {
+LoginMenu::LoginMenu() {
     this->addCommands(new RegisterCommand());
-    this->addCommands(new LoginasAdmin(currentUser));
-    this->addCommands(new LoginasCustomer(currentUser));
+    this->addCommands(new LoginasAdmin());
+    this->addCommands(new LoginasCustomer());
+
+    LoginMenu::logined = false;
 }
 
 void LoginMenu::addCommands(LoginMenuCommand* command) {
@@ -375,11 +384,10 @@ void LoginMenu::display() const {
         std::cout << "\nSelect an option: ";
         std::cin >> selection;
 
-        if (selection > commands.size())
-            std::cout << "Invalid selection, select another one: ";
+        if (selection == commands.size() + 1) break; // exit
+        else if (selection > commands.size())
+            std::cout << "Invalid selection, select another one: " << std::endl;
         else if(selection == 1) commands[selection-1]->execute(); // Register
-        else if (selection == commands.size() + 1) // Exit
-            break;
         else { // others
             commands[(selection - 1)]->execute();
             break;
@@ -418,7 +426,8 @@ void LoginasAdmin::execute() {
     std::cin >> pw;
     if (id == adminID && pw == adminPW) {
         std::cout << "Welcome admin!" << endl;
-        this->currentUser = new Admin(adminID, adminPW); // currentUser set
+        LoginMenu::currentUser = new Admin(adminID, adminPW); // currentUser set
+        LoginMenu::logined = true;
     }
     else {
         std::cout << "ID or PW is incorrect." << endl;
@@ -435,8 +444,8 @@ void LoginasCustomer::execute() {
     try{
         if (manager->check(id, pw)) {
             std::cout << "Login successful, welcome " << id << endl;
-            this->currentUser = new Customer(id, pw); // currentUser set
-            
+            LoginMenu::currentUser = new Customer(id, pw); // currentUser set
+            LoginMenu::logined = true;
         }
         else {
             std::cout << "ID or password is incorrect." << endl;
@@ -459,8 +468,8 @@ void UserManager::addNewUser(const string& id, const string& pw) throw(AlreadyEx
         throw DatabaseNotOpen("UserManager::addNewUser");
     }
     // if (alreadyExistID(user->getID())) throw AlreadyExist("UserManager::addNewUser");
-    std::cout << "hello" << std::endl;
-    outfile << id << " " << pw << endl;
+    // std::cout << "hello" << std::endl;
+    outfile << id << "," << pw << endl;
     outfile.close();
 }
 
@@ -472,7 +481,7 @@ bool UserManager::alreadyExistID(const string& id) const {
         string token;
         stringstream ss(line);
         vector<string> a;
-        while (getline(ss, token, ' ')) {
+        while (getline(ss, token, ',')) {
             a.push_back(token);
         }
         // input ID equals ID in UserDatabase
@@ -489,7 +498,7 @@ bool UserManager::check(const string& id, const string& pw) const throw(Database
         string token;
         stringstream ss(line);
         vector<string> a;
-        while (getline(ss, token, ' ')) a.push_back(token);
+        while (getline(ss, token, ',')) a.push_back(token);
         for(auto it = a.begin(); it!= a.end(); it++) 
             std::cout << *it << std::endl;
         if (a[0] == id && a[1] == pw) return true;
@@ -499,61 +508,130 @@ bool UserManager::check(const string& id, const string& pw) const throw(Database
 
 //origin BookRecommender.cpp
 
-void BookRecommender::readBookHistory(ostream* bookDatabase,
-    vector<Book*>& history) {}
+// void BookRecommender::countGenre(vector<Book*> history) {
+//     // Initialization
+//     this->genreCount.insert(make_pair("Literature", 0));
+//     this->genreCount.insert(make_pair("Non_fiction", 0));
+//     this->genreCount.insert(make_pair("Practical", 0));
+//     this->genreCount.insert(make_pair("TeenAndChild", 0));
 
-void BookRecommender::countGenre(vector<Book*> history) {
-    this->genreCount.insert(make_pair("Literature", 0));
-    this->genreCount.insert(make_pair("Non_fiction", 0));
-    this->genreCount.insert(make_pair("Practical", 0));
-    this->genreCount.insert(make_pair("TeenAndChild", 0));
+//     for (int i = 0; i < history.size(); ++i) {
+//         auto it = this->genreCount.find(history[i]->getGenre());
+//         it->second += 1;
+//     }
+// }
 
-    for (int i = 0; i < history.size(); ++i) {
-        auto it = this->genreCount.find(history[i]->getGenre());
-        it->second += 1;
+
+// 구매한 책 먼저 10권 넣고 조회한 책 10권 넣음
+void BookRecommender::makeHistoryList() {
+    add(Customer::purchasedBooks,"Literature");
+    add(Customer::purchasedBooks,"Practical");
+    add(Customer::purchasedBooks,"Non_fiction");
+    add(Customer::purchasedBooks,"TeenAndChild");
+
+    add(Customer::accessedBooks,"Literature");
+    add(Customer::accessedBooks,"Practical");
+    add(Customer::accessedBooks,"Non_fiction");
+    add(Customer::accessedBooks,"TeenAndChild");
+
+    // auto BookIter = history.equal_range("Literature");
+    // for(auto it = BookIter.first; it != BookIter.second; ++it)
+    //     std::cout << it->first << " " << it->second << std::endl;
+}
+
+// 삽입 utility function
+void BookRecommender::add(multimap<string, Book*> source, string g) {
+    auto BookIter = source.equal_range(g);
+    int cnt = 0;
+    for(auto it = BookIter.first; it != BookIter.second && cnt < 10; ++it) {
+        cnt++;
+        std::cout << it->second << std:: endl;
+        // history.insert(make_pair(g, it->second));
     }
 }
 
-void BookRecommender::countAuthors(vector<Book*> history) {
+void BookRecommender::countDetailGenre() {
+    count("Literature");
+    count("Practical");
+    count("Non_fiction");
+    count("TeenAndChild");
+}
 
-    for (int i = 0; i < history.size(); ++i) {
-        auto it = authorCount.find(history[i]->getAuthor());
-        if (it == authorCount.end()) // ���ڰ� ���ٸ�
-            authorCount.insert(make_pair(history[i]->getAuthor(), 1));
-        else
-            it->second += 1;
+void BookRecommender::count(string g) {
+    auto BookIter = history.equal_range(g);
+    for(auto it = BookIter.first; it != BookIter.second; ++it) {
+        detailGenreCount[0].find(it->second->getDetailGenre())->second++;
     }
 }
-void BookRecommender::countLang(vector<Book*> history) {
 
-    for (int i = 0; i < history.size(); ++i) {
-        auto it = authorCount.find(history[i]->getLang());
-        if (it == authorCount.end()) // ���ڰ� ���ٸ�
-            authorCount.insert(make_pair(history[i]->getLang(), 1));
-        else
-            it->second += 1;
-    }
+void BookRecommender::findMostCount() {
+    findMostDetail("Literature");
+    findMostDetail("Practical");
+    findMostDetail("Non_fiction");
+    findMostDetail("TeenAndChild");
 }
-void BookRecommender::analyzeHistory(vector<Book*> history) {}
+
+void BookRecommender::findMostDetail(string g) {
+    string _k;
+    int M = -1;
+    int cnt = 0;
+    auto BookIter = detailGenreCount[0].equal_range(g);
+    for(auto it = BookIter.first; it!=BookIter.second && cnt < 10; ++it) {
+        cnt++;
+        if(M <= it->second) _k = it->first;
+    }
+    mostCount.push_back(_k);
+} 
 void BookRecommender::makeRecommendation() {
-    sortRecommendationByCount();
-    sortRecommendationByDate();
-    sortRecommendationByPrice();
+    // Literature, Practical, non_fiction, teenandchild 순서
+    // mostCount[0]
+    ifstream inputfile;
+    string filepath = "databases/BookDatabase.txt";
+    inputfile.open(filepath);
+    if(inputfile.is_open()) {
+        string line;
+        vector<string> a;
+        while(getline(inputfile, line)) {
+            string token;
+            stringstream ss(line);
+            while(getline(ss, token, ',')) {
+                a.push_back(token);
+            }
+            // a[6] : genre, a[7] : detailGenre
+            if(a[7] == mostCount[0]) {
+                recommendResult[0].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+            } else if(a[7] == mostCount[1])
+                recommendResult[1].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+            else if(a[7] == mostCount[2])
+                recommendResult[2].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+            else if(a[7] == mostCount[3])
+                recommendResult[3].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+        }
+    }
 }
-void BookRecommender::sortRecommendationByCount() {}
-void BookRecommender::sortRecommendationByDate() {}
-void BookRecommender::sortRecommendationByPrice() {}
-void BookRecommender::sortRecommendation() {}
+
 void BookRecommender::printRecommendation() {
     array<string, 4> order = { "Literature", "Non_fiction", "Practical",
                               "TeenAndChild" };
+
+    makeHistoryList();
+    countDetailGenre();
+    findMostCount();
+    makeRecommendation();
     int cnt = 0;
     for (int i = 0; i < 4; i++) {
         std::cout << "**" << order[i] << " Recommendations\n";
-        cnt = 0;
-        auto rangeItr = recommendResult.equal_range(order[i]);
-        for (auto it = rangeItr.first; it != rangeItr.second; ++it) {
-            std::cout << cnt << ". " << it->second->getTitle() << endl;
-        }
+        std::cout << recommendResult[i].size() << std::endl;
+        // for(int j = 0; j<recommendResult[i].size(); j++){
+        //     // std::cout << j << ". " << recommendResult[i][j]->getTitle() << std::endl;
+        //     std::cout << "hello" << std::endl;
+        // }
+        // std::cout << std::endl;
+        // cnt = 1;
+        // while(!recommendResult[i].empty()) {
+        //     std::cout << cnt << ". " << recommendResult[i].front() << std::endl;
+        //     recommendResult[i].erase(recommendResult[i].begin());
+        //     cnt++;
+        // }
     }
 }

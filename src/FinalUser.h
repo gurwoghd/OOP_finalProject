@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-
+#include <queue>
 
 using namespace std;
 
@@ -75,15 +75,16 @@ public:
 class Book {
 public:
     Book(string date, string title, string author, string publisher, string lang,
-        float price, string genre)
+        float price, string genre, string detailGenre)
         : date(date), title(title), author(author), publisher(publisher),
-        lang(lang), price(price), genre(genre) {}
+        lang(lang), price(price), genre(genre), detailGenre(detailGenre) {}
     void setPublisher(const string publisher) { this->publisher = publisher; }
     void setTitle(const string title) { this->title = title; }
     void setPrice(const float price) { this->price = price; }
     void setDate(const string date) { this->date = date; }
     void setAuthor(const string author) { this->author = author; }
     void setLang(const string lang) { this->lang = lang; }
+    void setDetailGenre(const string detailGenre) {this->detailGenre = detailGenre;}
 
     string getPublisher() const { return this->publisher; }
     string getTitle() const { return this->title; }
@@ -92,6 +93,7 @@ public:
     string getAuthor() const { return this->author; }
     string getLang() const { return this->lang; }
     string getGenre() const { return this->genre; }
+    string getDetailGenre() const {return this->detailGenre;}
 
     void viewInfo() const;
 
@@ -103,7 +105,7 @@ protected:
     string lang;
     float price;
     string genre;
-    vector<string> detailGenre;
+    string detailGenre;
 
 private:
     friend class BookManager;
@@ -113,29 +115,29 @@ private:
 class Literature : public Book {
 public:
     Literature(string date, string title, string author, string publisher,
-        string lang, float price)
-        : Book(date, title, author, publisher, lang, price, "Literature") {}
+        string lang, float price, string detailGenre)
+        : Book(date, title, author, publisher, lang, price, "Literature", detailGenre) {}
 };
 
 class Non_fiction : public Book {
 public:
     Non_fiction(string date, string title, string author, string publisher,
-        string lang, float price)
-        : Book(date, title, author, publisher, lang, price, "Non_fiction") {}
+        string lang, float price, string detailGenre)
+        : Book(date, title, author, publisher, lang, price, "Non_fiction", detailGenre) {}
 };
 
 class Practical : public Book {
 public:
     Practical(string date, string title, string author, string publisher,
-        string lang, float price)
-        : Book(date, title, author, publisher, lang, price, "Practical") {}
+        string lang, float price, string detailGenre)
+        : Book(date, title, author, publisher, lang, price, "Practical", detailGenre) {}
 };
 
 class TeenAndChild : public Book {
 public:
     TeenAndChild(string date, string title, string author, string publisher,
-        string lang, float price)
-        : Book(date, title, author, publisher, lang, price, "TeenAndChild") {}
+        string lang, float price, string detailGenre)
+        : Book(date, title, author, publisher, lang, price, "TeenAndChild", detailGenre) {}
 };
 
 //original BookManager.h
@@ -174,44 +176,33 @@ public:
 
 class BookRecommender {
 public:
-    void countGenre(vector<Book*> history);
-    void countAuthors(vector<Book*> history);
-    void countLang(vector<Book*> history);
-    void analyzeHistory(vector<Book*> history);
+    void makeHistoryList();
     void makeRecommendation();
     void sortRecommendationByCount();
-    void sortRecommendationByDate();
-    void sortRecommendationByPrice();
-    void sortRecommendation();
+    void countDetailGenre();
+
+    void countGenre(vector<Book*> history);
+    void findMostCount();
     void printRecommendation();
-    void readBookHistory(ostream* bookDatabase,
-        vector<Book*>& history);
 
+public:
+    void add(multimap<string, Book*> source, string g);
+    void count(string g); // 세부 장르의 개수 카운트
+    void findMostDetail(string g);
+// private:
+//     multimap<string, string[4]> kindOfDetailGenre = (
+//         {"Literature", "Fiction"}, {"Liteature", "Classic"}, {"Literature", "Historical Fiction"}, {"Literature", "Mystery"},
+//         {"Non_fiction", "Memoir"}, {"Non_fiction", "Biography"}, {"Non_fiction", "History"}, {"Non_fiction", "Science"},
+//         {"Pracital", "Self-Help"}, {"Practical", "Personal Development"}, {"Pratical", "Productivity"}, {"Practical", "Wellness"},
+//         {"TeenAndChild", "Fantasy"}, {"TeenAndChild","Adventure"}, {"TeenAndChild","Coming-of Age"}, {"TeenAndChild","Historical Fiction"}
+//     );
 private:
-    multimap<string, Book*> books;
-    multimap<string, int> genreCount;
-    multimap<string, int> authorCount;
-    multimap<string, int> languageCount;
-    multimap<string, int> detailGenre;
-    multimap<string, Book*> recommendResult;
-};
-
-class Author {
-public:
-    string name;
-    int cnt;
-};
-
-class Language {
-public:
-    string lang;
-    int cnt;
-};
-
-class DetailGenre {
-public:
-    string name;
-    int cnt;
+    int recommendSize;
+    multimap<string, Book*> history;
+    array<multimap<string, Book*>, 4> books; // ???
+    array<vector<Book*>, 4> recommendResult; // 추천 결과
+    array<multimap<string, int>, 4> detailGenreCount; // genre별 디테일한 장르 카운트
+    vector<string> mostCount;
 };
 
 // original LoginMenu
@@ -225,16 +216,16 @@ public:
 class LoginMenu {
 private:
     vector<LoginMenuCommand*> commands;
-    bool logined;
-
-protected:
-    User* currentUser;
+    
+public:
+    static bool logined;
+    static User* currentUser;
 public:
     LoginMenu();
     void addCommands(LoginMenuCommand* command);
     void display() const;
     bool isLogined() const { return logined; }
-    User* getCurrentUser() const { return this->currentUser; }
+    User* getCurrentUser() const { return LoginMenu::currentUser; }
 };
 
 // Register and login commands have inheritance from Command, polymorphism
@@ -248,7 +239,7 @@ public:
     RegisterCommand() : manager(new UserManager()) {}
 
     // Override execute from virtual class Command, polymorphism
-    virtual void execute() override;
+    virtual void execute();
 };
 
 class LoginasAdmin : public LoginMenuCommand {
@@ -257,7 +248,7 @@ private:
     User* currentUser;
 
 public:
-    LoginasAdmin(User* _currentUser) : manager(new UserManager()), currentUser(_currentUser) {}
+    LoginasAdmin() : manager(new UserManager()) { }
 
     // Override execute from virtual class Command
     virtual void execute() override;
@@ -269,7 +260,7 @@ private:
     User* currentUser;
 
 public:
-    LoginasCustomer(User* _currentUser) : manager(new UserManager()), currentUser(_currentUser) {}
+    LoginasCustomer() : manager(new UserManager()) { }
     // Override execute from virtual class Command
     virtual void execute();
 };
@@ -334,8 +325,6 @@ private:
 
 class Customer : public User {
 public:
-    
-
     Customer(const string& id, const string& pw) : User(id, pw) {
         menu = new CustomerMenu();
     }
@@ -385,6 +374,11 @@ public:
 
         virtual void execute();
         void PrintBookInfo(string chosenGenre, int BookNumber);
+    private:
+        bool empty(string chosenGenre) const { 
+            auto selectedBookIter = bs->books.equal_range(chosenGenre);
+            return selectedBookIter.first == selectedBookIter.second;
+        }
     };
 
     class PurchaseBookCommand : public CustomerMenuCommand {
@@ -395,6 +389,11 @@ public:
 
         virtual void execute() override;
         void purchase(string chosenGenre, int BookNumber);
+    private:
+        bool empty(string chosenGenre) const { 
+            auto selectedBookIter = bs->books.equal_range(chosenGenre);
+            return selectedBookIter.first == selectedBookIter.second;
+        }
     };
 
     class GetRecommendationCommand : public CustomerMenuCommand {
@@ -405,11 +404,17 @@ public:
         virtual ~GetRecommendationCommand() {};
 
         virtual void execute() override;
+    private:
+        bool empty(string chosenGenre) const { 
+            auto selectedBookIter = bs->books.equal_range(chosenGenre);
+            return selectedBookIter.first == selectedBookIter.second;
+        }
     };
 
 private:
-    static BookRecommender* bookRecommender;
     CustomerMenu* menu;
+public: 
+    static BookRecommender* bookRecommender;
     static multimap<string, Book*> accessedBooks;
     static multimap<string, Book*> purchasedBooks;
 };

@@ -1,0 +1,119 @@
+2022-05-10,The Great Gatsby,F. Scott Fitzgerald,Scribner,English,10.99,Literature,Fiction
+1925-04-10,Moby-Dick,Herman Melville,Harper & Brothers,English,8.99,Literature,Classic
+1961-07-11,To Kill a Mockingbird,Harper Lee,J.B. Lippincott & Co.,English,7.99,Literature,Classic
+2003-09-30,The Kite Runner,Khaled Hosseini,Riverhead Books,English,12.99,Literature,Fiction
+1813-01-28,Pride and Prejudice,Jane Austen,T. Egerton,English,6.99,Literature,Classic
+1951-07-16,The Catcher in the Rye,J.D. Salinger,Little Brown and Company,English,9.99,Literature,Classic
+1997-07-26,Harry Potter and the Philosopher's Stone,J.K. Rowling,Bloomsbury,English,20.99,Literature,Fiction
+1869-01-01,War and Peace,Leo Tolstoy,The Russian Messenger,Russian,15.99,Literature,Classic
+1985-09-01,The Handmaid's Tale,Margaret Atwood,McClelland and Stewart,English,11.99,Literature,Fiction
+2000-02-29,Life of Pi,Yann Martel,Knopf Canada,English,10.99,Literature,Fiction
+2006-10-17,The Road,Cormac McCarthy,Knopf,English,11.99,Literature,Fiction
+1988-09-01,The Alchemist,Paulo Coelho,HarperOne,Portuguese,10.99,Literature,Fiction
+2006-03-28,Water for Elephants,Sara Gruen,Algonquin Books,English,9.99,Literature,Fiction
+1993-09-01,The Giver,Lois Lowry,Houghton Mifflin,English,8.99,Literature,Fiction
+2005-04-01,Never Let Me Go,Kazuo Ishiguro,Knopf,English,12.99,Literature,Fiction
+1932-01-01,Brave New World,Aldous Huxley,Chatto & Windus,English,9.99,Literature,Classic
+1954-07-29,Lord of the Flies,William Golding,Faber and Faber,English,8.99,Literature,Classic
+1974-09-27,Tinker Tailor Soldier Spy,John le Carré,Hodder & Stoughton,English,11.99,Literature,Mystery
+1922-02-02,Ulysses,James Joyce,Sylvia Beach,English,14.99,Literature,Classic
+1960-07-11,One Hundred Years of Solitude,Gabriel Garcia Marquez,Harper & Row,Spanish,13.99,Literature,Fiction
+1992-03-10,The Name of the Rose,Umberto Eco,Harvill Secker,Italian,12.99,Literature,Mystery
+1954-04-15,The Second Sex,Simone de Beauvoir,Gallimard,French,14.99,Literature,Classic
+1866-12-01,Crime and Punishment,Fyodor Dostoevsky,The Russian Messenger,Russian,11.99,Literature,Classic
+1984-04-01,Perfume: The Story of a Murderer,Patrick Suskind,Diogenes Verlag,German,10.99,Literature,Mystery
+1947-07-19,The Plague,Albert Camus,Gallimard,French,13.99,Literature,Classic
+1955-11-15,Pedro Paramo,Juan Rulfo,Fondo de Cultura Economica,Spanish,9.99,Literature,Fiction
+1965-05-01,Hopscotch,Julio Cortazar,Editorial Sudamericana,Spanish,15.99,Literature,Fiction
+1935-01-01,The Master and Margarita,Mikhail Bulgakov,YMCA Press,Russian,12.99,Literature,Historical Fiction
+1939-09-21,The Grapes of Wrath,John Steinbeck,Viking Press,Spanish,14.99,Literature,Historical Fiction
+2018-01-16,Educated,Tara Westover,Random House,English,13.99,NonFiction,Memoir
+2015-10-13,Between the World and Me,Ta-Nehisi Coates,Spiegel & Grau,English,14.99,NonFiction,Memoir
+2005-01-01,Freakonomics,Steven D. Levitt,William Morrow,English,15.99,NonFiction,Science
+2011-05-03,Bossypants,Tina Fey,Reagan Arthur Books,English,16.99,NonFiction,Memoir
+2008-01-22,Outliers,Malcolm Gladwell,Little Brown and Company,English,17.99,NonFiction,Science
+2018-09-18,Fear: Trump in the White House,Bob Woodward,Simon & Schuster,English,20.99,NonFiction,History
+2012-10-30,Wild,Cheryl Strayed,Knopf,English,10.99,NonFiction,Memoir
+2011-10-24,Steve Jobs,Walter Isaacson,Simon & Schuster,English,12.99,NonFiction,Biography
+2017-04-18,Hillbilly Elegy,J.D. Vance,Harper,English,13.99,NonFiction,Memoir
+2014-11-04,Yes Please,Amy Poehler,Dey Street Books,English,14.99,NonFiction,Memoir
+2010-05-11,The Immortal Life of Henrietta Lacks,Rebecca Skloot,Crown Publishing Group,English,12.99,NonFiction,Science
+2014-05-13,Capital in the Twenty-First Century,Thomas Piketty,Belknap Press,English,14.99,NonFiction,History
+2007-04-10,The Secret,Rhonda Byrne,Atria Books,English,15.99,NonFiction,Self-Help
+2001-08-15,Fast Food Nation,Eric Schlosser,Houghton Mifflin,English,11.99,NonFiction,History
+2010-09-21,The Warmth of Other Suns,Isabel Wilkerson,Random House,English,13.99,NonFiction,History
+2015-05-19,Modern Romance,Aziz Ansari,Penguin Press,English,14.99,NonFiction,Science
+2012-01-03,Quiet: The Power of Introverts in a World That Can't Stop Talking,Susan Cain,Crown Publishing Group,English,16.99,NonFiction,Self-Help
+2008-09-16,In Defense of Food,Michael Pollan,Penguin Press,English,12.99,NonFiction,Science
+2016-02-02,When Breath Becomes Air,Paul Kalanithi,Random House,English,15.99,NonFiction,Memoir
+2003-06-17,Stiff: The Curious Lives of Human Cadavers,Mary Roach,W. W. Norton & Company,English,10.99,NonFiction,Science
+2011-05-01,My Struggle,Karl Ove Knausgaard,Forlaget Oktober,Norwegian,19.99,NonFiction,Memoir
+2006-08-28,The Shadow of the Sun,Ryszard Kapuscinski,Granta Books,Polish,14.99,NonFiction,History
+2007-03-10,If This Is a Man,Primo Levi,Einaudi,Italian,12.99,NonFiction,Memoir
+1999-09-20,The Art of War,Sun Tzu,Shangwu Yinshuguan,Chinese,9.99,NonFiction,History
+2010-11-15,Thinking, Fast and Slow,Daniel Kahneman,Farrar, Straus and Giroux,French,15.99,NonFiction,Science
+2008-05-01,The Gulag Archipelago,Alexander Solzhenitsyn,Editions du Seuil,Russian,18.99,NonFiction,History
+1986-06-01,Cows, Pigs, Wars, and Witches,Marvin Harris,Random House,Portuguese,13.99,NonFiction,Science
+2013-10-01,Sapiens: A Brief History of Humankind,Yuval Noah Harari,Kinneret Zmora-Bitan Dvir,Hebrew,17.99,NonFiction,History
+1980-07-01,The Year of Magical Thinking,Joan Didion,Knopf,French,11.99,NonFiction,Memoir
+2002-09-01,The Order of Time,Carlo Rovelli,Adelphi Edizioni,Italian,16.99,NonFiction,Science
+2016-08-01,The Life-Changing Magic of Tidying Up,Marie Kondo,Ten Speed Press,English,16.99,Practical,Self-Help
+2006-09-05,Getting Things Done: The Art of Stress-Free Productivity,David Allen,Penguin Books,English,18.99,Practical,Productivity
+2010-12-28,The Power of Habit,Charles Duhigg,Random House,English,12.99,Practical,Productivity
+2013-04-23,Lean In: Women Work and the Will to Lead,Sheryl Sandberg,Knopf,English,14.99,Practical,Personal Development
+2014-12-30,The 4-Hour Workweek,Timothy Ferriss,Crown Publishing Group,English,20.99,Practical,Productivity
+2011-07-19,Start with Why,Simon Sinek,Portfolio,English,15.99,Practical,Personal Development
+2016-09-13,Deep Work: Rules for Focused Success in a Distracted World,Cal Newport,Grand Central Publishing,English,17.99,Practical,Productivity
+2017-11-14,Principles: Life and Work,Ray Dalio,Simon & Schuster,English,19.99,Practical,Productivity
+2020-01-01,Atomic Habits,James Clear,Avery,English,21.99,Practical,Productivity
+2015-02-01,Essentialism: The Disciplined Pursuit of Less,Greg McKeown,Crown Business,English,22.99,Practical,Productivity
+2016-03-15,Grit: The Power of Passion and Perseverance,Angela Duckworth,Scribner,English,17.99,Practical,Personal Development
+2018-10-09,Dare to Lead,Brené Brown,Random House,English,19.99,Practical,Personal Development
+2014-04-08,The Lean Startup,Eric Ries,Crown Business,English,20.99,Practical,Productivity
+1997-10-01,The 7 Habits of Highly Effective People,Stephen R. Covey,Free Press,English,18.99,Practical,Personal Development
+2011-09-20,The Lean Startup,Eric Ries,Crown Business,English,22.99,Practical,Productivity
+2015-09-15,Big Magic: Creative Living Beyond Fear,Elizabeth Gilbert,Riverhead Books,English,16.99,Practical,Personal Development
+2018-02-06,Crushing It!,Gary Vaynerchuk,Harper Business,English,19.99,Practical,Personal Development
+2009-12-31,The Happiness Project,Gretchen Rubin,HarperCollins,English,14.99,Practical,Wellness
+2018-10-16,Atomic Habits,James Clear,Avery,English,21.99,Practical,Productivity
+2013-09-10,The Miracle Morning,Hal Elrod,Hal Elrod International,English,15.99,Practical,Personal Development
+2011-01-01,The Life-Changing Magic of Tidying Up,Marie Kondo,Sangyo Henshu Center,Japanese,16.99,Practical,Self-Help
+2005-03-20,Ikigai,Hector Garcia,Urano,Spanish,15.99,Practical,Wellness
+2014-10-14,The Power of Now,Eckhart Tolle,Kosel-Verlag,German,13.99,Practical,Self-Help
+2016-01-01,The Secret,Rhonda Byrne,Edicoes Asa,Portuguese,14.99,Practical,Self-Help
+2013-02-07,Mindset: The New Psychology of Success,Carol S. Dweck,Cappelen Damm,Norwegian,12.99,Practical,Personal Development
+2012-11-13,How to Win Friends and Influence People,Dale Carnegie,Editorial Debate,Spanish,10.99,Practical,Personal Development
+2001-10-01,Thinking, Fast and Slow,Daniel Kahneman,Penguin Books,French,18.99,Practical,Productivity
+2008-09-09,Man's Search for Meaning,Viktor E. Frankl,Beacon Press,German,11.99,Practical,Self-Help
+2017-09-12,The Lean Startup,Eric Ries,Pearson Education,Italian,19.99,Practical,Productivity
+2004-07-27,Atomic Habits,James Clear,De Boeck Superieur,French,20.99,Practical,Productivity
+2008-09-08,The Hunger Games,Suzanne Collins,Scholastic Press,English,10.99,Teen and Child,Fantasy
+1950-10-16,The Lion the Witch and the Wardrobe,C.S. Lewis,Geoffrey Bles,English,6.99,Teen and Child,Fantasy
+1997-06-26,Harry Potter and the Philosopher's Stone,J.K. Rowling,Bloomsbury,English,8.99,Teen and Child,Fantasy
+2005-07-14,Twilight,Stephenie Meyer,Little Brown and Company,English,9.99,Teen and Child,Fantasy
+2003-07-01,Percy Jackson & the Olympians: The Lightning Thief,Rick Riordan,Disney-Hyperion,English,7.99,Teen and Child,Adventure
+2001-10-01,Artemis Fowl,Eoin Colfer,Viking Press,English,8.99,Teen and Child,Adventure
+1967-06-01,The Outsiders,S.E. Hinton,Viking Press,English,5.99,Teen and Child,Coming-of-Age
+2012-03-27,Wonder,R.J. Palacio,Knopf,English,12.99,Teen and Child,Coming-of-Age
+1998-09-20,Holes,Louis Sachar,Farrar Straus and Giroux,English,6.99,Teen and Child,Adventure
+2008-08-02,The Maze Runner,James Dashner,Delacorte Press,English,9.99,Teen and Child,Adventure
+1990-09-01,Matilda,Roald Dahl,Jonathan Cape,English,7.99,Teen and Child,Fantasy
+1973-10-15,Charlotte's Web,E.B. White,Harper & Brothers,English,6.99,Teen and Child,Fantasy
+2001-07-01,A Series of Unfortunate Events: The Bad Beginning,Lemony Snicket,HarperCollins,English,8.99,Teen and Child,Adventure
+1982-11-01,The BFG,Roald Dahl,Jonathan Cape,English,7.99,Teen and Child,Fantasy
+2009-07-07,Diary of a Wimpy Kid,Jeff Kinney,Amulet Books,English,9.99,Teen and Child,Coming-of-Age
+1998-11-01,Holes,Louis Sachar,Farrar Straus and Giroux,English,8.99,Teen and Child,Adventure
+2016-08-30,The Girl Who Drank the Moon,Kelly Barnhill,Algonquin Young Readers,English,10.99,Teen and Child,Fantasy
+2008-09-14,Coraline,Neil Gaiman,HarperCollins,English,9.99,Teen and Child,Fantasy
+2005-09-13,The Book Thief,Markus Zusak,Knopf,English,11.99,Teen and Child,Historical Fiction
+2011-01-01,Miss Peregrine's Home for Peculiar Children,Ransom Riggs,Quirk Books,English,10.99,Teen and Child,Fantasy
+2003-01-01,The Little Prince,Antoine de Saint-Exupery,Gallimard,French,9.99,Teen and Child,Fantasy
+2006-06-15,The Diary of a Young Girl,Anne Frank,Contact Publishing,Dutch,12.99,Teen and Child,Historical Fiction
+2000-07-08,Pippi Longstocking,Astrid Lindgren,Raben & Sjogren,Swedish,7.99,Teen and Child,Adventure
+1995-09-30,Heidi,Johanna Spyri,Scholastic,Swiss German,8.99,Teen and Child,Adventure
+2005-04-10,Momo,Michael Ende,Thienemann Verlag,German,10.99,Teen and Child,Fantasy
+2010-09-10,The Neverending Story,Michael Ende,Thienemann Verlag,German,13.99,Teen and Child,Fantasy
+2001-08-20,Journey to the River Sea,Eva Ibbotson,Macmillan Children's Books,Portuguese,11.99,Teen and Child,Adventure
+1993-07-13,The Witches,Roald Dahl,Jonathan Cape,Norwegian,9.99,Teen and Child,Fantasy
+1988-09-15,The House at Pooh Corner,A. A. Milne,Methuen,French,6.99,Teen and Child,Fantasy
+2002-01-01,The Adventures of Tintin,Herje,Le Lombard,French,14.99,Teen and Child,Adventure
