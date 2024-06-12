@@ -22,7 +22,7 @@ protected:
 public:
     User(const string& id, const string& pw) : identification(id), password(pw) {}
     // ������
-    virtual ~User() {};
+    virtual ~User() {}
 
     string getID() const { return identification; }
 
@@ -166,44 +166,6 @@ public:
 
 };
 
-// class AdminMenuCommand {
-// public:
-//     AdminMenuCommand(BookStorage* _bs) : bs(_bs) {}
-
-//     virtual void execute() = 0;
-//     virtual ~AdminMenuCommand() {}
-
-// protected:
-//     BookStorage* bs;
-// };
-
-// class AdminMenu {
-// public:
-//     AdminMenu();
-
-//     void addCommand(AdminMenuCommand* command);
-//     void displayCommands();
-
-// private:
-//     vector<AdminMenuCommand*> commands;
-//     BookStorage* bs;
-// };
-
-// class AddBook : public AdminMenuCommand {
-// public:
-//     AddBook(BookStorage* _bs) : AdminMenuCommand(_bs) {}
-//     virtual void execute();
-// };
-
-// class DeleteBook : public AdminMenuCommand {
-// public:
-//     DeleteBook(BookStorage* _bs) : AdminMenuCommand(_bs) {}
-
-//     void printBooks(string selectedGenre) const;
-//     virtual void execute();
-// };
-
-
 //original BookRecommender.h
 
 class BookRecommender {
@@ -247,70 +209,6 @@ public:
     string name;
     int cnt;
 };
-
-
-
-//original CustomerMenu.h
-class CustomerMenu;
-
-// class CustomerMenuCommand {
-// public:
-//     CustomerMenuCommand(BookStorage* _bs) : bs(_bs) {}
-
-//     virtual void execute() = 0;
-//     void PrintBooks(string chosenGenre);
-
-// protected:
-//     BookStorage* bs;
-// };
-
-// class CustomerMenu {
-// public:
-//     CustomerMenu();
-
-//     void addCommand(CustomerMenuCommand* com);
-//     void displayCommands();
-
-// private:
-//     vector<CustomerMenuCommand*> commands;
-//     BookStorage* bs;
-// };
-
-// class OpenLibraryCommand : public CustomerMenuCommand {
-// public:
-//     OpenLibraryCommand(BookStorage* _bs) : CustomerMenuCommand(_bs) {}
-//     // ������
-//     virtual ~OpenLibraryCommand() {};
-
-//     virtual void execute();
-//     typedef multimap<string, Book*> (*f)();
-//     void PrintBookInfo(string chosenGenre, int BookNumber, multimap<string, Book*> (*f)());
-// };
-
-// class PurchaseBookCommand : public CustomerMenuCommand {
-// public:
-//     PurchaseBookCommand(BookStorage* _bs) : CustomerMenuCommand(_bs) {}
-//     // ������
-//     virtual ~PurchaseBookCommand() {};
-
-//     virtual void execute() override;
-//     typedef multimap<string, Book*> (*f)();
-//     void purchase(string chosenGenre, int BookNumber, f getPurchaseBookHistory);
-// };
-
-// class GetRecommendationCommand : public CustomerMenuCommand {
-// public:
-//     typedef BookRecommender* (*f)();
-//     GetRecommendationCommand(BookStorage* _bs, f _getBookRecommender)
-//         : CustomerMenuCommand(_bs), getBookRecommender(_getBookRecommender) {}
-//     // ������
-//     virtual ~GetRecommendationCommand() {};
-
-//     virtual void execute() override;
-// private:
-//     f getBookRecommender;
-// };
-
 
 // original LoginMenu
 // Virtual class Command
@@ -439,7 +337,7 @@ public:
         menu = new CustomerMenu();
     }
     // ������ 
-    virtual ~Customer() {};
+    virtual ~Customer() {}
 
     // ������
     virtual void showMenu();
@@ -458,7 +356,7 @@ public:
     class CustomerMenuCommand {
     public:
         CustomerMenuCommand(BookStorage* _bs) : bs(_bs) {}
-
+        virtual ~CustomerMenuCommand() { }
         virtual void execute() = 0;
         void PrintBooks(string chosenGenre);
 

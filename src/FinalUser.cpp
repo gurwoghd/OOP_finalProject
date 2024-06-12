@@ -155,65 +155,6 @@ void BookManager::deleteBook(string genre, string title) {
     }
 }
 
-//origin BookRecommender.cpp
-
-void BookRecommender::countGenre(vector<Book*> history) {
-    this->genreCount.insert(make_pair("Literature", 0));
-    this->genreCount.insert(make_pair("Non_fiction", 0));
-    this->genreCount.insert(make_pair("Practical", 0));
-    this->genreCount.insert(make_pair("TeenAndChild", 0));
-
-    for (int i = 0; i < history.size(); ++i) {
-        auto it = this->genreCount.find(history[i]->getGenre());
-        it->second += 1;
-    }
-}
-
-void BookRecommender::countAuthors(vector<Book*> history) {
-
-    for (int i = 0; i < history.size(); ++i) {
-        auto it = authorCount.find(history[i]->getAuthor());
-        if (it == authorCount.end()) // ���ڰ� ���ٸ�
-            authorCount.insert(make_pair(history[i]->getAuthor(), 1));
-        else
-            it->second += 1;
-    }
-}
-void BookRecommender::countLang(vector<Book*> history) {
-
-    for (int i = 0; i < history.size(); ++i) {
-        auto it = authorCount.find(history[i]->getLang());
-        if (it == authorCount.end()) // ���ڰ� ���ٸ�
-            authorCount.insert(make_pair(history[i]->getLang(), 1));
-        else
-            it->second += 1;
-    }
-}
-void BookRecommender::analyzeHistory(vector<Book*> history) {}
-void BookRecommender::makeRecommendation() {
-    sortRecommendationByCount();
-    sortRecommendationByDate();
-    sortRecommendationByPrice();
-}
-void BookRecommender::sortRecommendationByCount() {}
-void BookRecommender::sortRecommendationByDate() {}
-void BookRecommender::sortRecommendationByPrice() {}
-void BookRecommender::sortRecommendation() {}
-void BookRecommender::printRecommendation() {
-    array<string, 4> order = { "Literature", "Non_fiction", "Practical",
-                              "TeenAndChild" };
-    int cnt = 0;
-    for (int i = 0; i < 4; i++) {
-        std::cout << "**" << order[i] << " Recommendations\n";
-        cnt = 0;
-        auto rangeItr = recommendResult.equal_range(order[i]);
-        for (auto it = rangeItr.first; it != rangeItr.second; ++it) {
-            std::cout << cnt << ". " << it->second->getTitle() << endl;
-        }
-    }
-}
-void BookRecommender::readBookHistory(ostream* bookDatabase,
-    vector<Book*>& history) {}
 
 //origin BookStorage.cpp
 BookStorage::BookStorage() {
@@ -491,3 +432,63 @@ void LoginasCustomer::execute() {
         std::cout << "ID or password is incorrect." << endl;
     }
 }
+
+//origin BookRecommender.cpp
+
+void BookRecommender::countGenre(vector<Book*> history) {
+    this->genreCount.insert(make_pair("Literature", 0));
+    this->genreCount.insert(make_pair("Non_fiction", 0));
+    this->genreCount.insert(make_pair("Practical", 0));
+    this->genreCount.insert(make_pair("TeenAndChild", 0));
+
+    for (int i = 0; i < history.size(); ++i) {
+        auto it = this->genreCount.find(history[i]->getGenre());
+        it->second += 1;
+    }
+}
+
+void BookRecommender::countAuthors(vector<Book*> history) {
+
+    for (int i = 0; i < history.size(); ++i) {
+        auto it = authorCount.find(history[i]->getAuthor());
+        if (it == authorCount.end()) // ���ڰ� ���ٸ�
+            authorCount.insert(make_pair(history[i]->getAuthor(), 1));
+        else
+            it->second += 1;
+    }
+}
+void BookRecommender::countLang(vector<Book*> history) {
+
+    for (int i = 0; i < history.size(); ++i) {
+        auto it = authorCount.find(history[i]->getLang());
+        if (it == authorCount.end()) // ���ڰ� ���ٸ�
+            authorCount.insert(make_pair(history[i]->getLang(), 1));
+        else
+            it->second += 1;
+    }
+}
+void BookRecommender::analyzeHistory(vector<Book*> history) {}
+void BookRecommender::makeRecommendation() {
+    sortRecommendationByCount();
+    sortRecommendationByDate();
+    sortRecommendationByPrice();
+}
+void BookRecommender::sortRecommendationByCount() {}
+void BookRecommender::sortRecommendationByDate() {}
+void BookRecommender::sortRecommendationByPrice() {}
+void BookRecommender::sortRecommendation() {}
+void BookRecommender::printRecommendation() {
+    array<string, 4> order = { "Literature", "Non_fiction", "Practical",
+                              "TeenAndChild" };
+    int cnt = 0;
+    for (int i = 0; i < 4; i++) {
+        std::cout << "**" << order[i] << " Recommendations\n";
+        cnt = 0;
+        auto rangeItr = recommendResult.equal_range(order[i]);
+        for (auto it = rangeItr.first; it != rangeItr.second; ++it) {
+            std::cout << cnt << ". " << it->second->getTitle() << endl;
+        }
+    }
+}
+void BookRecommender::readBookHistory(ostream* bookDatabase,
+    vector<Book*>& history) {}
