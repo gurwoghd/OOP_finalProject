@@ -35,14 +35,18 @@ public:
 //////////////////////  Exception clsses  ///////////////////////////////////
 class AlreadyExist : public exception {
 public:
-    // ������
-    virtual string what() { return "User already exsits\n"; }
+    AlreadyExist(string _functionName) : exception(), functionName(_functionName) { }
+    virtual string what() { return "\nAt " + functionName + " : " + " ID already exists. Try Again\n"; }
+private:
+    string functionName;
 };
 
 class DatabaseNotOpen : public exception {
 public:
-    // ������
-    virtual string what() { return "File not opened\n"; }
+    DatabaseNotOpen(string _functionName) : exception(), functionName(_functionName) { }
+    virtual string what() { return "\nAt " + functionName + " : " + " File not opened\n"; }
+private:
+    string functionName;
 };
 
 ///////////////////////////////////////////////////////////////
@@ -53,15 +57,15 @@ class UserManager {
 private:
     // vector<User> users;
     fstream userDB;
-    string filename;
+    string filepath;
 
 public:
-    UserManager() { string filename = "../databases/UserDatabase.txt"; }
+    UserManager(const string& _filepath = "databases/UserDatabase.txt") : filepath(_filepath) { }
 
     void addNewUser(const string& id, const string& pw) throw(AlreadyExist,
         DatabaseNotOpen);
     bool alreadyExistID(const string& id) const;
-    bool check(const string& id, const string& pw) const;
+    bool check(const string& id, const string& pw) const throw(DatabaseNotOpen);
 };
 
 
@@ -162,7 +166,7 @@ public:
     fstream bookDB;
     array<string, 4> kindOfGenre = { "Literature", "Practical", "Non_fiction",
                                     "TeenAndChild" };
-    string filepath = "../databases/BookDatabase.txt";
+    string filepath = "databases/BookDatabase.txt";
 
 };
 
@@ -277,11 +281,8 @@ public:
     Admin(const string& id, const string& pw) : User(id, pw) {
         menu = new AdminMenu();
     }
-    // ������
     virtual ~Admin() {};
-
-    // ������
-    virtual void showMenu() override;
+    virtual void showMenu() override {menu->displayCommands();}
 
     BookManager* getBookManager() { return bookManager; }
 
@@ -333,23 +334,23 @@ private:
 
 class Customer : public User {
 public:
+    
+
     Customer(const string& id, const string& pw) : User(id, pw) {
         menu = new CustomerMenu();
     }
-    // ������ 
     virtual ~Customer() {}
 
-    // ������
-    virtual void showMenu();
+    virtual void showMenu() override {menu->displayCommands();}
 
     static multimap<string, Book*> getReadBookHistory() {
-        return readBookHistory;
+        return Customer::accessedBooks;
     }
     static multimap<string, Book*> getPurchaseBookHistory() {
-        return purchaseBookHistory;
+        return Customer::purchasedBooks;
     }
     static BookRecommender* getBookRecommender() {
-        return bookRecommender;
+        return Customer::bookRecommender;
     }
 
 public:
@@ -409,7 +410,6 @@ public:
 private:
     static BookRecommender* bookRecommender;
     CustomerMenu* menu;
-
-    static multimap<string, Book*> readBookHistory;
-    static multimap<string, Book*> purchaseBookHistory;
+    static multimap<string, Book*> accessedBooks;
+    static multimap<string, Book*> purchasedBooks;
 };

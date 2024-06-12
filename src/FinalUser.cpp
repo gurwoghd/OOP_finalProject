@@ -12,6 +12,10 @@
 
 using namespace std;
 
+multimap<string, Book*> Customer::accessedBooks;
+multimap<string, Book*> Customer::purchasedBooks;
+BookRecommender* Customer::bookRecommender;
+
 //origin AdminMenu.cpp
 
 Admin::AdminMenu::AdminMenu() {
@@ -36,7 +40,7 @@ void Admin::AdminMenu::displayCommands() {
 
         if (selection >= commands.size() || selection <= 0)
             std::cout << "Invalid selection, select another one: ";
-        else if (selection == commands.size() - 1)
+        else if (selection == commands.size() + 1)
             break;
         else
             this->commands[selection - 1]->execute();
@@ -52,7 +56,7 @@ void Admin::AddBook::execute() {
     try {
         bs->bookDB.open(bs->filepath);
         if (bs->bookDB.is_open())
-            throw(DatabaseNotOpen());
+            throw(DatabaseNotOpen("Admin::AddBook::execute()"));
 
         std::cout << "Select the Genre of the book to add" << endl << endl;
         std::cout << "1. Literature 2. Practical 3. Non-Fiction 4. Teen-and Child: ";
@@ -163,7 +167,7 @@ BookStorage::BookStorage() {
     try {
         // if not opened
         if (!bookDB.is_open())
-            throw DatabaseNotOpen();
+            throw DatabaseNotOpen("BookStorage::BookStorage");
         // books ���� �����
         string line;
         while (getline(bookDB, line)) {
@@ -221,7 +225,7 @@ void Customer::CustomerMenu::displayCommands() {
 
         if (selection >= commands.size() || selection <= 0)
             std::cout << "Invalid selection, select another one: ";
-        else if (selection == commands.size() - 1)
+        else if (selection == commands.size() + 1)
             break;
         else
             this->commands[selection - 1]->execute();
@@ -326,7 +330,7 @@ void Customer::PurchaseBookCommand::execute() {
     }
 }
 
-typedef multimap<string, Book*> (*f)();
+
 void Customer::PurchaseBookCommand::purchase(string chosenGenre, int BookNumber) {
     auto selectedBookIter = bs->books.equal_range(chosenGenre);
     auto it = selectedBookIter.first;
@@ -371,11 +375,12 @@ void LoginMenu::display() const {
         std::cout << "\nSelect an option: ";
         std::cin >> selection;
 
-        if (selection >= commands.size())
+        if (selection > commands.size())
             std::cout << "Invalid selection, select another one: ";
-        else if (selection == commands.size() - 1)
+        else if(selection == 1) commands[selection-1]->execute(); // Register
+        else if (selection == commands.size() + 1) // Exit
             break;
-        else {
+        else { // others
             commands[(selection - 1)]->execute();
             break;
         }
@@ -389,12 +394,15 @@ void RegisterCommand::execute() {
     std::cin >> id;
     std::cout << "Enter a password to use: ";
     std::cin >> pw;
-    if (!manager->alreadyExistID(id)) {
+    try {
         manager->addNewUser(id, pw);
         std::cout << "\nRegister Complete! You are ready to log in!" << endl;
     }
-    else {
-        std::cout << "\nID already exists. Try again." << endl;
+    catch (DatabaseNotOpen& e) {
+        cout << e.what() << endl;
+    }
+    catch (AlreadyExist& e) {
+        cout << e.what() << endl;
     }
 }
 
@@ -424,16 +432,75 @@ void LoginasCustomer::execute() {
     std::cin >> id;
     std::cout << "Enter your password: ";
     std::cin >> pw;
-    if (manager->check(id, pw)) {
-        std::cout << "Login successful, welcome " << id << endl;
-        this->currentUser = new Customer(id, pw); // currentUser set
-    }
-    else {
-        std::cout << "ID or password is incorrect." << endl;
+    try{
+        if (manager->check(id, pw)) {
+            std::cout << "Login successful, welcome " << id << endl;
+            this->currentUser = new Customer(id, pw); // currentUser set
+            
+        }
+        else {
+            std::cout << "ID or password is incorrect." << endl;
+        }
+    }catch(DatabaseNotOpen& e) {
+        std::cout << e.what() << std::endl;
     }
 }
 
+
+void UserManager::addNewUser(const string& id, const string& pw) throw(AlreadyExist, DatabaseNotOpen) {
+    // users.push_back(User(id, pw));
+    std::cout << filepath << std::endl;
+    unique_ptr<User> user = make_unique<Customer>(id, pw);
+    ofstream outfile;
+
+    outfile.open(filepath);
+    // userDB.open(filepath);
+    if (!outfile.is_open()) {
+        throw DatabaseNotOpen("UserManager::addNewUser");
+    }
+    // if (alreadyExistID(user->getID())) throw AlreadyExist("UserManager::addNewUser");
+    std::cout << "hello" << std::endl;
+    outfile << id << " " << pw << endl;
+    outfile.close();
+}
+
+bool UserManager::alreadyExistID(const string& id) const {
+    string line;
+    ifstream readUserDB;
+    readUserDB.open(filepath);
+    while (getline(readUserDB, line)) {
+        string token;
+        stringstream ss(line);
+        vector<string> a;
+        while (getline(ss, token, ' ')) {
+            a.push_back(token);
+        }
+        // input ID equals ID in UserDatabase
+        if (a[0] == id) return true;
+    }
+    return false;
+}
+bool UserManager::check(const string& id, const string& pw) const throw(DatabaseNotOpen) {
+    string line;
+    ifstream readUserDB;
+    readUserDB.open(filepath);
+    if(!readUserDB.is_open()) throw DatabaseNotOpen("UserManager::check");
+    while (getline(readUserDB, line)) {
+        string token;
+        stringstream ss(line);
+        vector<string> a;
+        while (getline(ss, token, ' ')) a.push_back(token);
+        for(auto it = a.begin(); it!= a.end(); it++) 
+            std::cout << *it << std::endl;
+        if (a[0] == id && a[1] == pw) return true;
+    }
+    return false;
+}
+
 //origin BookRecommender.cpp
+
+void BookRecommender::readBookHistory(ostream* bookDatabase,
+    vector<Book*>& history) {}
 
 void BookRecommender::countGenre(vector<Book*> history) {
     this->genreCount.insert(make_pair("Literature", 0));
@@ -490,5 +557,3 @@ void BookRecommender::printRecommendation() {
         }
     }
 }
-void BookRecommender::readBookHistory(ostream* bookDatabase,
-    vector<Book*>& history) {}
