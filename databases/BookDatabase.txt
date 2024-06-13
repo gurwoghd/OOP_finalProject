@@ -105,10 +105,10 @@
 1998-11-01,Holes,Louis Sachar,Farrar Straus and Giroux,English,8.99,Teen and Child,Adventure
 2016-08-30,The Girl Who Drank the Moon,Kelly Barnhill,Algonquin Young Readers,English,10.99,Teen and Child,Fantasy
 2008-09-14,Coraline,Neil Gaiman,HarperCollins,English,9.99,Teen and Child,Fantasy
-2005-09-13,The Book Thief,Markus Zusak,Knopf,English,11.99,Teen and Child,Historical Fiction
+2005-09-13,The Book Thief,Markus Zusak,Knopf,English,11.99,Teen and Child,Theatre
 2011-01-01,Miss Peregrine's Home for Peculiar Children,Ransom Riggs,Quirk Books,English,10.99,Teen and Child,Fantasy
 2003-01-01,The Little Prince,Antoine de Saint-Exupery,Gallimard,French,9.99,Teen and Child,Fantasy
-2006-06-15,The Diary of a Young Girl,Anne Frank,Contact Publishing,Dutch,12.99,Teen and Child,Historical Fiction
+2006-06-15,The Diary of a Young Girl,Anne Frank,Contact Publishing,Dutch,12.99,Teen and Child,Theatre
 2000-07-08,Pippi Longstocking,Astrid Lindgren,Raben & Sjogren,Swedish,7.99,Teen and Child,Adventure
 1995-09-30,Heidi,Johanna Spyri,Scholastic,Swiss German,8.99,Teen and Child,Adventure
 2005-04-10,Momo,Michael Ende,Thienemann Verlag,German,10.99,Teen and Child,Fantasy

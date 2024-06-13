@@ -21,7 +21,6 @@ protected:
 
 public:
     User(const string& id, const string& pw) : identification(id), password(pw) {}
-    // ������
     virtual ~User() {}
 
     string getID() const { return identification; }
@@ -35,6 +34,7 @@ public:
 //////////////////////  Exception clsses  ///////////////////////////////////
 class AlreadyExist : public exception {
 public:
+    // which function made this error?
     AlreadyExist(string _functionName) : exception(), functionName(_functionName) { }
     virtual string what() { return "\nAt " + functionName + " : " + " ID already exists. Try Again\n"; }
 private:
@@ -43,6 +43,7 @@ private:
 
 class DatabaseNotOpen : public exception {
 public:
+    // which function made this error?
     DatabaseNotOpen(string _functionName) : exception(), functionName(_functionName) { }
     virtual string what() { return "\nAt " + functionName + " : " + " File not opened\n"; }
 private:
@@ -55,7 +56,6 @@ private:
 
 class UserManager {
 private:
-    // vector<User> users;
     fstream userDB;
     string filepath;
 
@@ -95,6 +95,7 @@ public:
     string getGenre() const { return this->genre; }
     string getDetailGenre() const {return this->detailGenre;}
 
+    // view info of books
     void viewInfo() const;
 
 protected:
@@ -148,23 +149,20 @@ public:
     void deleteBook(string genre, string title);
 
 private:
+    // use map using Entry (key-value)
     multimap<string, Book*> books;
 
     friend class Admin;
 };
 
-
-//origin AdminMenu.h
-
-//original Bookstorage.h
+// class about book
+// 
 class BookStorage {
 public:
     BookStorage();
 
 public:
-    /////////////// ���⼭ public���� �����ϴ� �� ����?????
-    multimap<string, Book*> books;
-    // shared_ptr<Customer> currentUser;
+    multimap<string, Book*> books; // books in databases according to each book genre
     fstream bookDB;
     array<string, 4> kindOfGenre = { "Literature", "Practical", "Non_fiction",
                                     "TeenAndChild" };
@@ -172,41 +170,29 @@ public:
 
 };
 
-//original BookRecommender.h
-
+// Primary Class for recommending books
 class BookRecommender {
 public:
-    void makeHistoryList();
-    void makeRecommendation();
+    void makeHistoryList(); // add 10 purchased books + 10 accessed books to history attribute
+    void makeRecommendation(); // make recommendation list
     void sortRecommendationByCount();
-    void countDetailGenre();
+    void countDetailGenre(); // count how much and which detail genres are accessed and purchased by customers
 
-    void countGenre(vector<Book*> history);
-    void findMostCount();
-    void printRecommendation();
+    void findMostCount(); // Find the most accessed and purchased detail genre in Literature, practical, non-fiction, and teen and child
+    void printRecommendation(); // print recommend result
 
 public:
+    // utility functions for makeHistoryList() and countDetailGenre()
     void add(multimap<string, Book*> source, string g);
-    void count(string g); // 세부 장르의 개수 카운트
-    void findMostDetail(string g);
-// private:
-//     multimap<string, string[4]> kindOfDetailGenre = (
-//         {"Literature", "Fiction"}, {"Liteature", "Classic"}, {"Literature", "Historical Fiction"}, {"Literature", "Mystery"},
-//         {"Non_fiction", "Memoir"}, {"Non_fiction", "Biography"}, {"Non_fiction", "History"}, {"Non_fiction", "Science"},
-//         {"Pracital", "Self-Help"}, {"Practical", "Personal Development"}, {"Pratical", "Productivity"}, {"Practical", "Wellness"},
-//         {"TeenAndChild", "Fantasy"}, {"TeenAndChild","Adventure"}, {"TeenAndChild","Coming-of Age"}, {"TeenAndChild","Historical Fiction"}
-//     );
+    void count( string g); // 세부 장르의 개수 카운트
+
 private:
-    int recommendSize;
     multimap<string, Book*> history;
-    array<multimap<string, Book*>, 4> books; // ???
     array<vector<Book*>, 4> recommendResult; // 추천 결과
-    array<multimap<string, int>, 4> detailGenreCount; // genre별 디테일한 장르 카운트
+    multimap<string, int> DGCount;
     vector<string> mostCount;
 };
 
-// original LoginMenu
-// Virtual class Command
 class LoginMenuCommand {
 public:
     virtual void execute() = 0;
@@ -228,40 +214,34 @@ public:
     User* getCurrentUser() const { return LoginMenu::currentUser; }
 };
 
-// Register and login commands have inheritance from Command, polymorphism
+// Register and login commands have inheritance from LoginMenuCommand, polymorphism
 class RegisterCommand : public LoginMenuCommand {
 private:
-    // UserManager is needed in order to add the newly made account into the user
-    // vector
-    UserManager* manager;
+    unique_ptr<UserManager> manager;
 
 public:
-    RegisterCommand() : manager(new UserManager()) {}
+    RegisterCommand() : manager(make_unique<UserManager>()) {}
 
-    // Override execute from virtual class Command, polymorphism
     virtual void execute();
 };
 
 class LoginasAdmin : public LoginMenuCommand {
 private:
-    UserManager* manager;
+    unique_ptr<UserManager> manager;
     User* currentUser;
 
 public:
-    LoginasAdmin() : manager(new UserManager()) { }
+    LoginasAdmin() : manager(make_unique<UserManager>()) { }
 
-    // Override execute from virtual class Command
     virtual void execute() override;
 };
 
 class LoginasCustomer : public LoginMenuCommand {
 private:
-    UserManager* manager;
-    User* currentUser;
+    unique_ptr<UserManager> manager;
 
 public:
-    LoginasCustomer() : manager(new UserManager()) { }
-    // Override execute from virtual class Command
+    LoginasCustomer() : manager(make_unique<UserManager>()) { }
     virtual void execute();
 };
 
@@ -270,7 +250,7 @@ public:
 class Admin : public User {
 public:
     Admin(const string& id, const string& pw) : User(id, pw) {
-        menu = new AdminMenu();
+        menu = make_unique<AdminMenu>();
     }
     virtual ~Admin() {};
     virtual void showMenu() override {menu->displayCommands();}
@@ -318,7 +298,7 @@ public:
 
 private:
     BookManager* bookManager;
-    AdminMenu* menu;
+    unique_ptr<AdminMenu> menu;
 
     friend class AdminMenu;
 };
@@ -326,7 +306,7 @@ private:
 class Customer : public User {
 public:
     Customer(const string& id, const string& pw) : User(id, pw) {
-        menu = new CustomerMenu();
+        menu = make_unique<CustomerMenu>();
     }
     virtual ~Customer() {}
 
@@ -345,6 +325,7 @@ public:
 public:
     class CustomerMenuCommand {
     public:
+        // Each MenuCommand commonly have BookStorage bs since it serves some useful info
         CustomerMenuCommand(BookStorage* _bs) : bs(_bs) {}
         virtual ~CustomerMenuCommand() { }
         virtual void execute() = 0;
@@ -369,7 +350,6 @@ public:
     class OpenLibraryCommand : public CustomerMenuCommand {
     public:
         OpenLibraryCommand(BookStorage* _bs) : CustomerMenuCommand(_bs) {}
-        // ������
         virtual ~OpenLibraryCommand() {};
 
         virtual void execute();
@@ -384,7 +364,6 @@ public:
     class PurchaseBookCommand : public CustomerMenuCommand {
     public:
         PurchaseBookCommand(BookStorage* _bs) : CustomerMenuCommand(_bs) {}
-        // ������
         virtual ~PurchaseBookCommand() {};
 
         virtual void execute() override;
@@ -400,7 +379,6 @@ public:
     public:
         GetRecommendationCommand(BookStorage* _bs)
             : CustomerMenuCommand(_bs) {}
-        // ������
         virtual ~GetRecommendationCommand() {};
 
         virtual void execute() override;
@@ -412,7 +390,7 @@ public:
     };
 
 private:
-    CustomerMenu* menu;
+    unique_ptr<CustomerMenu> menu;
 public: 
     static BookRecommender* bookRecommender;
     static multimap<string, Book*> accessedBooks;
