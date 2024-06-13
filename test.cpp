@@ -1,33 +1,23 @@
 #include <iostream>
+#include <string>
+#include <queue>
+
+using namespace std;
 
 class A {
 public:
-    int a;
-    A(int _a) : a(_a)  { }
-};
-
-class B {
-public:
-    A& val;
-    B() { }
-
-};
-
-class C { // loginasCustomer
-public:
-    A* val;
-    C(A* _val) { _val = val; }
+    A(string a, int b, string c) : a(a), b(b), c(c) { }
+private:
+    string a;
+    int b;
+    string c;
 };
 
 int main() {
-    A* currentUser;
+    priority_queue<A*> pq;
+    pq.push(new A("a", 10, "h"));
+    pq.push(new A("b", 10, "h"));
+    pq.push(new A("c", 10, "h"));
 
-    B* loginMenu = new B(); // loginMenu
-    C* loC = new C(loginMenu->val); 
-
-    loC->val = new A(20);
-
-    std::cout << loginMenu->val << std::endl;
-    std::cout << (loC);
-    
+    std::cout << (pq.top()) << std::endl;
 }

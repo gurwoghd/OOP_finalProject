@@ -289,6 +289,28 @@ void Customer::OpenLibraryCommand::PrintBookInfo(string chosenGenre, int BookNum
     Customer::accessedBooks.insert(make_pair(chosenGenre, selectedBook));
 }
 
+void BookRecommender::printRecomentation() {
+       std::cout << "**" << "Literature" << " Recommendations\n";
+    std::cout << "1. " << "The Great Gatsby" << std::endl;
+    std::cout << "2. " << "The Kite Runner" << std::endl;
+    std::cout << "3. " << "Harry Potter and the Philosopher's Stone" << std::endl << std::endl;
+
+    std::cout << "**" << "Practical" << std::endl;
+    std::cout << "1. " << "The Life-Changing Magic of Tidying Up" << std::endl;
+    std::cout << "2. " << "The Life-Changing Magic of Tidying Up" << std::endl;
+    std::cout << "3. " << "The Power of Now,Eckhart Tolle" << std::endl << std::endl;
+
+    std::cout << "**" << "Non_Fiction" << std::endl;
+    std::cout << "1. " << "Fear: Trump in the White House" << std::endl;
+    std::cout << "2. " << "Capital in the Twenty-First Century" << std::endl;
+    std::cout << "3. " << "Fast Food Nation" << std::endl << std::endl;
+
+    std::cout << "**" << "Teen-and Child" << std::endl;
+    std::cout << "1. " << "The Hunger Games" << std::endl;
+    std::cout << "2. " << "The Lion the Witch and the Wardrobe" << std::endl;
+    std::cout << "3. " << "Harry Potter and the Philosopher's Stone" << std::endl << std::endl;
+}
+
 void Customer::PurchaseBookCommand::execute() {
     int chosenGenre;
     int BookNumber;
@@ -596,13 +618,13 @@ void BookRecommender::makeRecommendation() {
             }
             // a[6] : genre, a[7] : detailGenre
             if(a[7] == mostCount[0]) {
-                recommendResult[0].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+                recommendResult[0].push(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
             } else if(a[7] == mostCount[1])
-                recommendResult[1].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+                recommendResult[1].push(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
             else if(a[7] == mostCount[2])
-                recommendResult[2].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+                recommendResult[2].push(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
             else if(a[7] == mostCount[3])
-                recommendResult[3].push_back(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
+                recommendResult[3].push(new Book(a[0], a[1], a[2], a[3], a[4], stof(a[5]), a[6], a[7]));
         }
     }
 }
@@ -618,6 +640,39 @@ void BookRecommender::printRecommendation() {
     int cnt = 0;
     for (int i = 0; i < 4; i++) {
         std::cout << "\n**" << order[i] << " Recommendations\n";
-        std::cout << recommendResult[i].size() << std::endl;
+        // std::cout << recommendResult[i].size() << std::endl;
+        cnt = 1;
+        while(!recommendResult[i].empty()){
+            std::cout << cnt << ". " << recommendResult[i].top() << std::endl;
+            cnt++;
+        }
+        std::cout << std::endl;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

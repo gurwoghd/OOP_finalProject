@@ -174,12 +174,14 @@ public:
 class BookRecommender {
 public:
     void makeHistoryList(); // add 10 purchased books + 10 accessed books to history attribute
+    void printRecomentation();
     void makeRecommendation(); // make recommendation list
     void sortRecommendationByCount();
     void countDetailGenre(); // count how much and which detail genres are accessed and purchased by customers
 
     void findMostCount(); // Find the most accessed and purchased detail genre in Literature, practical, non-fiction, and teen and child
     void printRecommendation(); // print recommend result
+
 
 public:
     // utility functions for makeHistoryList() and countDetailGenre()
@@ -188,7 +190,7 @@ public:
 
 private:
     multimap<string, Book*> history;
-    array<vector<Book*>, 4> recommendResult; // 추천 결과
+    array<priority_queue<Book*>, 4> recommendResult; // 추천 결과
     multimap<string, int> DGCount;
     vector<string> mostCount;
 };
